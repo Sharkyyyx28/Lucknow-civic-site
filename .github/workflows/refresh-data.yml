@@ -1,0 +1,33 @@
+# Replaces the old server crontab (install-refresh-cron.sh, docker exec'ing
+# into lmc-node-1) now that production runs on Vercel/Render instead of a
+# self-run droplet — see DEPLOYMENT.md step 5. These scripts only need
+# network access + DB_* credentials, so they run just as well from a
+# GitHub-hosted runner as they did from the old server's cron.
+name: Refresh data
+
+on:
+  schedule:
+    # Sundays 03:00 UTC — roughly the old cron's timing. GitHub Actions cron
+    # is UTC-only; adjust if you need this aligned to a specific local time.
+    - cron: '0 3 * * 0'
+  workflow_dispatch: {}
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    env:
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_SSL: ${{ secrets.DB_SSL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npm run refresh:officials
+      - run: npm run refresh:osm
+      - run: npm run refresh:social-handles
