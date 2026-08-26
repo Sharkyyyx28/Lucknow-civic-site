@@ -179,14 +179,6 @@ export default function OfficialsPage({ directory }: { directory: OfficialsDirec
                   {source.updated ?? 'at an unknown date'}.
                 </li>
               ))}
-              <li className="border-t border-accent-300 pt-2.5">
-                This is a much smaller directory than the road-register-backed one the Bengaluru
-                version of this site publishes — Lucknow has no equivalent open ward-level civic
-                register or open-data portal that this project has found. No engineers, utility
-                contacts or emergency desks are listed here, and no phone numbers or emails are
-                published, because we don&apos;t have a verified source for either.
-              </li>
-              <li>By-elections and seat changes will make individual rows stale over time.</li>
             </ul>
           </div>
 

@@ -62,6 +62,19 @@ function StatusBadge({ status }: { status: HandleCheckStatus }) {
   return <span className={STATUS_CLASS[status]}> · {label}</span>
 }
 
+// A handle counts as "verified" only if every link it actually has came back
+// 'ok' on its last check — one dead ('not_found') or unconfirmed ('unknown'/
+// 'unchecked') link is enough to put the whole entry in the "needs a look"
+// bucket, since that's the entry an admin would actually want to click into.
+function isHandleVerified(h: SocialHandle): boolean {
+  const statuses = [
+    h.x ? h.xStatus : null,
+    h.instagram ? h.instagramStatus : null,
+    h.website ? h.websiteStatus : null,
+  ].filter((s): s is HandleCheckStatus => s !== null)
+  return statuses.length > 0 && statuses.every(s => s === 'ok')
+}
+
 interface FormValues {
   name: string
   category: HandleCategory
@@ -193,6 +206,9 @@ export default function AdminSocialHandlesPage({ signedIn, authorized, email, ha
   const [checkError, setCheckError] = useState<string | null>(null)
   const [checkingAll, setCheckingAll] = useState(false)
   const [checkAllError, setCheckAllError] = useState<string | null>(null)
+
+  const verifiedCount = useMemo(() => handles.filter(isHandleVerified).length, [handles])
+  const unverifiedCount = handles.length - verifiedCount
 
   const sections = useMemo(() => {
     const byCategory = new Map<HandleCategory, SocialHandle[]>()
@@ -332,10 +348,18 @@ export default function AdminSocialHandlesPage({ signedIn, authorized, email, ha
 
           {authorized && (
             <>
-              <div className="mt-6 flex items-center justify-between border-b border-ink-200 pb-4">
-                <p className="text-sm text-ink-500">
-                  {handles.length.toLocaleString('en-IN')} {handles.length === 1 ? 'entry' : 'entries'}
-                </p>
+              <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-b border-ink-200 pb-4">
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm">
+                  <p className="text-ink-500">
+                    {handles.length.toLocaleString('en-IN')} {handles.length === 1 ? 'entry' : 'entries'}
+                  </p>
+                  <p className="text-green-700" title="Every link on this entry last checked as live">
+                    <span className="font-semibold">{verifiedCount}</span> verified
+                  </p>
+                  <p className="text-amber-600" title="Never checked, unconfirmed, or has a dead link">
+                    <span className="font-semibold">{unverifiedCount}</span> unverified
+                  </p>
+                </div>
                 <div className="flex items-center gap-3">
                   <button
                     type="button"
