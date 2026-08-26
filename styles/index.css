@@ -1,0 +1,331 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Keyframes used only by the hand-written classes below. Tailwind emits a
+   keyframes block when it sees the matching animate-* utility in the markup,
+   which never happens for these, so declaring them here keeps them from being
+   purged. */
+@keyframes markerSweep {
+  0% {
+    background-size: 0% 0.32em;
+  }
+  100% {
+    background-size: 100% 0.32em;
+  }
+}
+
+@layer utilities {
+  /* ---------------------------------------------------------------------
+     Signature effects. The keyframes for the animate-* utilities live in
+     tailwind.config.js; what is here is the handful of effects that need more
+     than one declaration to work.
+     --------------------------------------------------------------------- */
+
+  /* Emphasis treatment for headlines: an ochre marker stroke sitting behind
+     the bottom third of the text, drawn on from the left. The text itself
+     stays solid ink, so it never loses contrast the way clipped-gradient
+     text does. */
+  .marker {
+    background-image: linear-gradient(
+      to right,
+      theme('colors.accent.300'),
+      theme('colors.accent.200')
+    );
+    background-repeat: no-repeat;
+    background-position: 0 88%;
+    background-size: 100% 0.32em;
+    animation: markerSweep 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    /* A little breathing room so the stroke reads as a highlight, not a rule. */
+    padding-inline: 0.06em;
+  }
+
+  /* Card hover: an ochre bar wipes down the left edge and the border warms.
+     No lift and no coloured halo — this is meant to feel like a page being
+     marked up rather than an object floating. */
+  .card-mark {
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.25s, background-color 0.25s;
+  }
+
+  .card-mark::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: 3px;
+    background: theme('colors.brand.600');
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .card-mark:hover {
+    border-color: theme('colors.brand.300');
+    background-color: theme('colors.brand.50');
+  }
+
+  .card-mark:hover::before {
+    transform: scaleY(1);
+  }
+
+  /* Map graticule — the faint ruled grid a survey sheet is printed on. Two
+     line sets rather than a dot field, at map-ish spacing. */
+  .bg-graticule {
+    background-image: linear-gradient(
+        to right,
+        theme('colors.ink.200') 1px,
+        transparent 1px
+      ),
+      linear-gradient(to bottom, theme('colors.ink.200') 1px, transparent 1px);
+    background-size: 72px 72px;
+    opacity: 0.55;
+  }
+
+  /* Scroll reveal, driven by the IntersectionObserver in components/reveal.tsx.
+     Kept as two classes rather than an animation so the observer decides when
+     the transition runs. */
+  .reveal-hidden {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.65s ease-out, transform 0.65s ease-out;
+  }
+
+  .reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Stagger siblings. Tailwind's delay-* utilities are transition-delay only,
+     so animation entrances need their own. */
+  .stagger-1 {
+    animation-delay: 0.1s;
+  }
+  .stagger-2 {
+    animation-delay: 0.2s;
+  }
+  .stagger-3 {
+    animation-delay: 0.3s;
+  }
+  .stagger-4 {
+    animation-delay: 0.4s;
+  }
+  .stagger-5 {
+    animation-delay: 0.5s;
+  }
+}
+
+/* Nothing above should move for a visitor who has asked it not to. Entrances
+   land on their final state rather than being skipped, so no content is lost. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal-hidden {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* The marker stroke should still be there — just already drawn. */
+  .marker {
+    animation: none;
+    background-size: 100% 0.32em;
+  }
+
+  .card-mark::before {
+    transition: none;
+  }
+}
+
+/* Alternating row colors */
+.ReactVirtualized__Table__row {
+  border-bottom: 1px solid #e7e5e4;
+  transition: background-color 0.15s ease;
+}
+
+.ReactVirtualized__Table__row:nth-child(odd) {
+  background-color: #fafaf9;
+}
+
+.ReactVirtualized__Table__row:hover {
+  background-color: #ccfbf1;
+}
+
+/* Header styles */
+.ReactVirtualized__Table__headerRow {
+  background-color: #0f766e;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 0.75rem;
+}
+
+/* ---------------------------------------------------------------------------
+   /map shell. 100vh on a phone is the viewport *without* the browser's own
+   chrome, so the bottom of the map — the locate button, the ward sheet — ends
+   up under the address bar. dvh tracks the visible height instead.
+   --------------------------------------------------------------------------- */
+.map-page-shell {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: #f1f5f9;
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------------------
+   Area age layer (components/area-age-layer.tsx): the year chips sitting on
+   each dated locality, and the era legend.
+
+   The marker icon itself is 0x0 and sits exactly on the anchor point Leaflet
+   positions; the chip inside pulls itself back over that point, which keeps our
+   centring out of the way of Leaflet's own transform on the icon element.
+   --------------------------------------------------------------------------- */
+.age-chip {
+  width: 0;
+  height: 0;
+}
+
+.age-chip__body {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 3px 8px;
+  border-radius: 5px;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  font-family: system-ui, sans-serif;
+  line-height: 1.1;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.age-chip__name {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.age-chip__year {
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* Legend. It sits in the map's bottom-left stack (.map-bottom-left), which owns
+   the corner's spacing — hard-positioning it here is what used to drop it on top
+   of the locate button and its error banner. */
+.age-legend {
+  width: 208px;
+  max-width: 100%;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.22);
+  font-family: system-ui, sans-serif;
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+.age-legend__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 8px 7px 11px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.age-legend__btn {
+  border: none;
+  background: #f3f4f6;
+  color: #374151;
+  border-radius: 4px;
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.age-legend__btn:hover {
+  background: #e5e7eb;
+}
+
+.age-legend__body {
+  padding: 8px 11px 10px;
+}
+
+.age-legend__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-bottom: 5px;
+}
+
+.age-legend__swatch {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.age-legend__label {
+  display: flex;
+  flex-direction: column;
+  font-size: 11px;
+  color: #111827;
+  line-height: 1.25;
+  min-width: 0;
+}
+
+.age-legend__sub {
+  color: #6b7280;
+  font-size: 10px;
+}
+
+.age-legend__note {
+  margin-top: 8px;
+  padding-top: 7px;
+  border-top: 1px solid #f3f4f6;
+  font-size: 10px;
+  line-height: 1.4;
+  color: #9ca3af;
+}
+
+@media (max-width: 640px) {
+  .age-legend {
+    width: 172px;
+  }
+
+  .age-legend__btn {
+    width: 26px;
+    height: 26px;
+  }
+
+  .age-legend__sub,
+  .age-legend__note {
+    display: none;
+  }
+
+  .age-chip__name {
+    font-size: 9px;
+  }
+
+  .age-chip__year {
+    font-size: 11px;
+  }
+}
