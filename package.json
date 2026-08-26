@@ -9,6 +9,7 @@
     "refresh:officials": "tsx scripts/refresh-officials.ts",
     "refresh:social-handles": "tsx scripts/refresh-social-handle-checks.ts",
     "seed:social-handles": "tsx scripts/seed-social-handles.ts",
+    "seed:community-posts": "tsx scripts/seed-community-posts.ts",
     "seed:all": "npm run refresh:officials && npm run refresh:osm",
     "db:bootstrap": "tsx scripts/migrate.ts database/schema.sql",
     "db:migrate": "tsx scripts/migrate.ts database/migrations/migrate_all.sql",

@@ -1331,7 +1331,7 @@ export default function LayeredLucknowMap({ initialWardName }: { initialWardName
         let wardsFc = layerData.wards369
         if (!wardsFc) {
           try {
-            const res = await fetch('/api/geojson/wards-369')
+            const res = await fetch('/api/geojson/wards')
             wardsFc = await res.json()
             if (wardsFc) setLayerData(prev => ({ ...prev, wards369: wardsFc as FeatureCollection }))
           } catch {
@@ -1381,7 +1381,7 @@ export default function LayeredLucknowMap({ initialWardName }: { initialWardName
       let wardsFc = layerData.wards369
       if (!wardsFc) {
         try {
-          const res = await fetch('/api/geojson/wards-369')
+          const res = await fetch('/api/geojson/wards')
           wardsFc = await res.json()
           if (wardsFc && !cancelled) setLayerData(prev => ({ ...prev, wards369: wardsFc as FeatureCollection }))
         } catch {
@@ -1473,7 +1473,7 @@ export default function LayeredLucknowMap({ initialWardName }: { initialWardName
   const ensureWards369 = useCallback(async (): Promise<FeatureCollection | null> => {
     if (layerData.wards369) return layerData.wards369
     try {
-      const res = await fetch('/api/geojson/wards-369')
+      const res = await fetch('/api/geojson/wards')
       const data = await res.json()
       if (data) setLayerData(prev => (prev.wards369 ? prev : { ...prev, wards369: data }))
       return data ?? null

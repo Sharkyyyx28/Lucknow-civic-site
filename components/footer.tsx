@@ -32,7 +32,7 @@ const Footer = () => {
             rel="noopener noreferrer"
             className="hover:underline"
           >
-            Portfolio
+            Know about Sharkyyyx28
           </a>
         </div>
       </Container>
