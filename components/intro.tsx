@@ -24,15 +24,21 @@ const TICKS = [
 ]
 
 const Intro = () => {
+  // The height is capped as well as proportional: on a tall or zoomed-out
+  // viewport a bare 88vh opens a screen-deep empty band under the type.
   return (
-    <section className="relative flex min-h-[88vh] items-center overflow-hidden border-b border-ink-200 bg-ink-50">
-      {/* The sheet this is printed on: a ruled graticule, with elevation
-          contours drifting off the right edge. Decorative only. */}
+    <section className="relative flex min-h-[min(88vh,900px)] items-center overflow-hidden border-b border-ink-200 bg-ink-50">
+      {/* The sheet this is printed on. The graticule is full-bleed, but the
+          contours and scale bar belong to the content column — pinned to the
+          section they stranded themselves hundreds of pixels off the text on a
+          wide display. `container` here so the hero lines up with the
+          Container the rest of the page uses. */}
       <div className="pointer-events-none absolute inset-0 bg-graticule" aria-hidden="true" />
-      <HeroBackdrop />
 
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-5 py-20 sm:px-8 lg:px-12">
-        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
+      <div className="container relative mx-auto px-5 py-20">
+        <HeroBackdrop />
+
+        <div className="relative z-10 grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
           <div className="animate-fadeInUp space-y-7">
             {/* A filing tag rather than a pill — squared off, ruled on the
                 left, the way a register entry is labelled. */}
@@ -40,7 +46,11 @@ const Intro = () => {
               Officials · Metro · Community
             </p>
 
-            <h1 className="font-display text-5xl font-bold leading-[1.06] tracking-tight text-ink-900 md:text-6xl lg:text-[4.5rem]">
+            {/* Sized to what the left column can actually hold at each
+                breakpoint — "Lucknow civic data," runs about 10.3x the font
+                size, so anything larger breaks after "civic" and the intended
+                two-line shape becomes three. */}
+            <h1 className="font-display text-5xl font-bold leading-[1.06] tracking-tight text-ink-900 md:text-6xl xl:text-[3.5rem] 2xl:text-[4.25rem]">
               Lucknow civic data,
               <br />
               <span className="marker">in one place.</span>
