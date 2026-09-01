@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Lucknow civic data">
+  <title>Lucknow civic data</title>
+  <!--
+    The site mark (components/ward-mark.tsx) reduced to what survives a 16px
+    tab: the ward cell, and the pin at its centre. The neighbour dots and the
+    shared-edge line are dropped — at favicon size the edge reads as a crack
+    across the shape rather than a boundary between two wards.
+
+    The pin is a teardrop rather than the mark's circle because a centred disc
+    inside a pale cell reads as a yolk at every size.
+  -->
+  <rect width="100" height="100" rx="22" fill="#333e84"/>
+  <path d="M50 8 L84 26 L92 62 L66 90 L30 88 L10 56 L20 22 Z"
+        transform="translate(50 50) scale(0.8) translate(-50 -50)"
+        fill="#faf8f4"/>
+  <path d="M50 26 a14 14 0 0 1 14 14 c0 10.5 -14 26 -14 26 s-14 -15.5 -14 -26 a14 14 0 0 1 14 -14 Z"
+        transform="translate(50 50) scale(0.95) translate(-50 -52)"
+        fill="#e88b10"/>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!--
+    Safari's pinned-tab mask: one flat silhouette with no colour of its own —
+    the browser tints it with the `color` on <link rel="mask-icon">. evenodd
+    punches the pin out of the cell so it reads as a hole.
+  -->
+  <path fill-rule="evenodd"
+        d="M50 8 L84 26 L92 62 L66 90 L30 88 L10 56 L20 22 Z
+           M50 24 a13 13 0 0 1 13 13 c0 10 -13 24 -13 24 s-13 -14 -13 -24 a13 13 0 0 1 13 -13 Z"/>
+</svg>

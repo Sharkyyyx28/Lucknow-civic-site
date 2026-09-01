@@ -1,4 +1,7 @@
 export const EXAMPLE_PATH = 'blog-starter'
 export const CMS_NAME = 'Lucknow'
+// Absolute, because most scrapers will not resolve a relative og:image.
+// public/assets/og.png is generated from the hero — regenerate it if the
+// headline or the mark changes.
 export const HOME_OG_IMAGE_URL =
-  'https://og-image.vercel.app/Next.js%20Blog%20Starter%20Example.png?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fnextjs-black-logo.svg'
+  'https://lucknow.sharkyyyx28.space/assets/og.png'

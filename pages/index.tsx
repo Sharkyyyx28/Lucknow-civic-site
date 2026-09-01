@@ -30,7 +30,7 @@ export default function Index({ allPosts }: Props) {
         <title>Lucknow civic data</title>
         <meta
           name="description"
-          content="Ward boundaries, pincode-to-ward lookup, road data and neighbourhood amenities across Greater Lucknow."
+          content="Who represents Lucknow, the metro network, neighbourhood amenities and what residents are reporting — from public sources, made searchable."
         />
       </Head>
       {/* The hero runs edge to edge, so it sits outside the Container. */}
