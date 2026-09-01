@@ -67,7 +67,7 @@ export const TOOLS: Tool[] = [
   {
     id: 'about',
     name: 'About this project',
-    href: '/posts/about-benglauru',
+    href: '/posts/about-lucknow',
     blurb:
       'What this site is, why it exists, and which datasets sit behind each tool — including what was cut going from the Bengaluru original to this Lucknow build.',
     cta: 'Read the background',

@@ -12,6 +12,11 @@ const nextConfig = {
         destination: '/metro-line-count-down',
         permanent: true,
       },
+      {
+        source: '/posts/about-benglauru',
+        destination: '/posts/about-lucknow',
+        permanent: true,
+      },
     ]
   },
 }
