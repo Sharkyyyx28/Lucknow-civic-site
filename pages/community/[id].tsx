@@ -96,7 +96,7 @@ export default function CommunityPostPage({ post: initialPost }: Props) {
         </Head>
 
         <article className="max-w-2xl mx-auto pt-10 md:pt-14 pb-24">
-          <Link href="/community" className="text-sm text-neutral-500 hover:text-black hover:underline">
+          <Link href="/community" className="text-sm text-ink-500 hover:text-black hover:underline">
             ← Community
           </Link>
 
@@ -114,7 +114,7 @@ export default function CommunityPostPage({ post: initialPost }: Props) {
                     className={`inline-flex items-center gap-1.5 border px-3 py-2 text-sm duration-200 transition-colors ${
                       category === c
                         ? 'border-black bg-black text-white font-bold'
-                        : 'border-neutral-300 text-neutral-700 hover:border-black'
+                        : 'border-ink-300 text-ink-700 hover:border-black'
                     }`}
                   >
                     <span aria-hidden="true">{CATEGORY_STYLES[c].icon}</span>
@@ -149,7 +149,7 @@ export default function CommunityPostPage({ post: initialPost }: Props) {
                 aria-label="Landmark"
               />
 
-              <p className="text-xs text-neutral-500">
+              <p className="text-xs text-ink-500">
                 The pinned location cannot be changed — delete the post and write a new one if
                 it is about a different place.
               </p>
@@ -179,12 +179,12 @@ export default function CommunityPostPage({ post: initialPost }: Props) {
                 {post.title}
               </h1>
 
-              <p className="text-neutral-600 mb-2">
+              <p className="text-ink-600 mb-2">
                 {post.authorName} · {formatPostDate(post.createdAt)}
-                {edited && <span className="text-neutral-400"> · edited</span>}
+                {edited && <span className="text-ink-400"> · edited</span>}
               </p>
 
-              <p className="text-sm text-neutral-600 border-b border-neutral-200 pb-6 mb-8">
+              <p className="text-sm text-ink-600 border-b border-ink-200 pb-6 mb-8">
                 📍 <Link
                   href={`/community?ward=${encodeURIComponent(post.wardName)}`}
                   className="hover:underline"
@@ -195,10 +195,10 @@ export default function CommunityPostPage({ post: initialPost }: Props) {
                 {post.placeLabel ? ` · ${post.placeLabel}` : ''}
               </p>
 
-              <PostBody text={post.body} className="text-lg leading-relaxed text-neutral-800" />
+              <PostBody text={post.body} className="text-lg leading-relaxed text-ink-800" />
 
               <div className="mt-10">
-                <h2 className="text-xs font-semibold uppercase tracking-wide text-neutral-400 mb-2">
+                <h2 className="text-xs font-semibold uppercase tracking-wide text-ink-400 mb-2">
                   The place this is about
                 </h2>
                 <LocationPickerMap lat={post.lat} lng={post.lng} readOnly height={220} />
@@ -209,20 +209,20 @@ export default function CommunityPostPage({ post: initialPost }: Props) {
                   >
                     View this ward on the map →
                   </Link>
-                  <span className="text-xs text-neutral-500">
+                  <span className="text-xs text-ink-500">
                     {post.lat.toFixed(5)}, {post.lng.toFixed(5)}
                   </span>
                 </div>
               </div>
 
               {post.isAuthor && (
-                <div className="flex flex-wrap items-center gap-4 mt-10 pt-6 border-t border-neutral-200">
+                <div className="flex flex-wrap items-center gap-4 mt-10 pt-6 border-t border-ink-200">
                   <button type="button" onClick={startEdit} className={SMALL_BTN}>
                     Edit post
                   </button>
                   {confirmDelete ? (
                     <>
-                      <span className="text-sm text-neutral-500">Delete this post?</span>
+                      <span className="text-sm text-ink-500">Delete this post?</span>
                       <button
                         type="button"
                         onClick={handleDelete}
@@ -243,7 +243,7 @@ export default function CommunityPostPage({ post: initialPost }: Props) {
                     <button
                       type="button"
                       onClick={() => setConfirmDelete(true)}
-                      className="text-sm text-neutral-500 hover:text-red-600 hover:underline"
+                      className="text-sm text-ink-500 hover:text-red-600 hover:underline"
                     >
                       Delete
                     </button>

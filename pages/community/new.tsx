@@ -115,8 +115,8 @@ export default function NewCommunityPostPage() {
       <Layout preview={false}>
         <Container>
           <div className="max-w-2xl mx-auto py-24" aria-busy="true">
-            <div className="h-9 w-56 bg-neutral-100 animate-pulse mb-4" />
-            <div className="h-4 w-72 bg-neutral-100 animate-pulse" />
+            <div className="h-9 w-56 bg-ink-100 animate-pulse mb-4" />
+            <div className="h-4 w-72 bg-ink-100 animate-pulse" />
             <span className="sr-only">Loading…</span>
           </div>
         </Container>
@@ -133,14 +133,14 @@ export default function NewCommunityPostPage() {
             <h1 className="text-4xl md:text-5xl font-bold tracking-tighter leading-tight mb-4">
               Write a post
             </h1>
-            <p className="text-lg text-neutral-700 mb-8">
+            <p className="text-lg text-ink-700 mb-8">
               Sign in to share something about a place in Lucknow. Your post shows up for
               everyone reading that ward&apos;s feed, under the name on your profile.
             </p>
             <button onClick={() => signIn('google')} className={PRIMARY_BTN}>
               Sign in with Google
             </button>
-            <p className="text-sm text-neutral-500 mt-4">
+            <p className="text-sm text-ink-500 mt-4">
               <Link href="/community" className="hover:underline">
                 Or keep reading the feed →
               </Link>
@@ -159,14 +159,14 @@ export default function NewCommunityPostPage() {
         <Head><title>Write a post | Lucknow</title></Head>
 
         <div className="max-w-2xl mx-auto pt-10 md:pt-14 pb-24">
-          <Link href="/community" className="text-sm text-neutral-500 hover:text-black hover:underline">
+          <Link href="/community" className="text-sm text-ink-500 hover:text-black hover:underline">
             ← Community
           </Link>
 
           <h1 className="text-4xl font-bold tracking-tighter leading-tight mt-4 mb-2">
             Write a post
           </h1>
-          <p className="text-neutral-600 mb-8">
+          <p className="text-ink-600 mb-8">
             Pin the place you are writing about — the ward and corporation are worked out from
             the pin, so your neighbours see it in their feed.
           </p>
@@ -186,7 +186,7 @@ export default function NewCommunityPostPage() {
                       className={`inline-flex items-center gap-1.5 border px-3 py-2 text-sm duration-200 transition-colors ${
                         selected
                           ? 'border-black bg-black text-white font-bold'
-                          : 'border-neutral-300 text-neutral-700 hover:border-black'
+                          : 'border-ink-300 text-ink-700 hover:border-black'
                       }`}
                     >
                       <span aria-hidden="true">{CATEGORY_STYLES[c].icon}</span>
@@ -225,14 +225,14 @@ export default function NewCommunityPostPage() {
                 placeholder="What is happening, how long it has been going on, and what would help. Leave a blank line between paragraphs."
                 className={`${INPUT} resize-y`}
               />
-              <p className="text-xs text-neutral-500 mt-1">
+              <p className="text-xs text-ink-500 mt-1">
                 {body.length}/{BODY_MAX} characters · plain text, no formatting
               </p>
             </div>
 
             <div>
               <label htmlFor="placeLabel" className="block text-sm font-semibold mb-1">
-                Landmark <span className="font-normal text-neutral-500">(optional)</span>
+                Landmark <span className="font-normal text-ink-500">(optional)</span>
               </label>
               <input
                 id="placeLabel"
@@ -250,13 +250,13 @@ export default function NewCommunityPostPage() {
 
               {savedPlaces.length > 0 && (
                 <div className="flex flex-wrap items-center gap-2 mb-3">
-                  <span className="text-xs text-neutral-500">Your saved places:</span>
+                  <span className="text-xs text-ink-500">Your saved places:</span>
                   {savedPlaces.map(place => (
                     <button
                       key={place.id}
                       type="button"
                       onClick={() => useSavedPlace(place)}
-                      className="border border-neutral-300 px-2 py-1 text-xs hover:border-black duration-200 transition-colors"
+                      className="border border-ink-300 px-2 py-1 text-xs hover:border-black duration-200 transition-colors"
                     >
                       {place.label}
                     </button>
@@ -285,7 +285,7 @@ export default function NewCommunityPostPage() {
               )}
 
               {lat != null && lng != null && (
-                <p className="text-sm text-neutral-600 mt-2">
+                <p className="text-sm text-ink-600 mt-2">
                   📍 {lat.toFixed(5)}, {lng.toFixed(5)}
                   {wardName ? (
                     <>
@@ -298,7 +298,7 @@ export default function NewCommunityPostPage() {
               )}
               {locateError && <p className="text-amber-600 text-sm mt-2">{locateError}</p>}
               {lat == null && (
-                <p className="text-xs text-neutral-500 mt-2">
+                <p className="text-xs text-ink-500 mt-2">
                   Tap the map to drop a pin. A post needs one so it can be filed under the right ward.
                 </p>
               )}
@@ -306,7 +306,7 @@ export default function NewCommunityPostPage() {
 
             {error && <p className="text-red-600 text-sm">{error}</p>}
 
-            <div className="flex items-center gap-4 border-t border-neutral-200 pt-6">
+            <div className="flex items-center gap-4 border-t border-ink-200 pt-6">
               <button type="submit" disabled={!canSubmit} className={PRIMARY_BTN}>
                 {submitting ? 'Publishing…' : 'Publish post'}
               </button>
@@ -314,7 +314,7 @@ export default function NewCommunityPostPage() {
                 Cancel
               </Link>
             </div>
-            <p className="text-xs text-neutral-500">
+            <p className="text-xs text-ink-500">
               Posts are public. Your profile name is shown — never the email you signed in with.
             </p>
           </form>

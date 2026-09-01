@@ -119,14 +119,14 @@ export default function SearchableSelect({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={ariaLabel}
-        className="w-full flex items-center justify-between gap-2 border border-neutral-300 bg-white px-3 py-2 text-left duration-200 transition-colors hover:border-neutral-400 focus:outline-none focus:border-black"
+        className="w-full flex items-center justify-between gap-2 border border-ink-300 bg-white px-3 py-2 text-left duration-200 transition-colors hover:border-ink-400 focus:outline-none focus:border-black"
       >
-        <span className={`truncate ${selected ? '' : 'text-neutral-500'}`}>
+        <span className={`truncate ${selected ? '' : 'text-ink-500'}`}>
           {selected?.label ?? placeholder}
         </span>
         <span className="flex items-baseline gap-2 shrink-0">
           {selected?.hint && (
-            <span className="hidden sm:inline text-xs text-neutral-500">{selected.hint}</span>
+            <span className="hidden sm:inline text-xs text-ink-500">{selected.hint}</span>
           )}
           <svg
             width="12"
@@ -136,7 +136,7 @@ export default function SearchableSelect({
             stroke="currentColor"
             strokeWidth="2"
             aria-hidden="true"
-            className={`text-neutral-400 duration-200 transition-transform ${open ? 'rotate-180' : ''}`}
+            className={`text-ink-400 duration-200 transition-transform ${open ? 'rotate-180' : ''}`}
           >
             <path d="M2 4l4 4 4-4" />
           </svg>
@@ -148,7 +148,7 @@ export default function SearchableSelect({
         // /profile opens this directly above an embedded picker map — while
         // staying under the sticky navbar at 1100.
         <div className="absolute z-[1050] mt-1 w-full min-w-[16rem] border border-black bg-white shadow-lg">
-          <div className="border-b border-neutral-200 p-2">
+          <div className="border-b border-ink-200 p-2">
             <input
               ref={inputRef}
               type="text"
@@ -162,7 +162,7 @@ export default function SearchableSelect({
               aria-autocomplete="list"
               aria-controls={`${id}-listbox`}
               aria-activedescendant={filtered[activeIndex] ? `${id}-opt-${activeIndex}` : undefined}
-              className="w-full border border-neutral-300 px-2 py-1.5 text-sm focus:outline-none focus:border-black"
+              className="w-full border border-ink-300 px-2 py-1.5 text-sm focus:outline-none focus:border-black"
             />
           </div>
 
@@ -174,7 +174,7 @@ export default function SearchableSelect({
             className="max-h-72 overflow-y-auto py-1"
           >
             {filtered.length === 0 && (
-              <li className="px-3 py-6 text-center text-sm text-neutral-500">
+              <li className="px-3 py-6 text-center text-sm text-ink-500">
                 Nothing matches “{query}”.
               </li>
             )}
@@ -190,7 +190,7 @@ export default function SearchableSelect({
                 // accessibility tree are the options themselves.
                 <li key={option.value} role="presentation">
                   {header && (
-                    <p className="sticky top-0 bg-white px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wide text-neutral-400">
+                    <p className="sticky top-0 bg-white px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wide text-ink-400">
                       {header}
                     </p>
                   )}
@@ -204,14 +204,14 @@ export default function SearchableSelect({
                     onClick={() => choose(option)}
                     onMouseEnter={() => setActiveIndex(index)}
                     className={`w-full flex items-baseline justify-between gap-3 px-3 py-2 text-left text-sm duration-100 transition-colors ${
-                      isActive ? 'bg-neutral-100' : ''
+                      isActive ? 'bg-ink-100' : ''
                     }`}
                   >
                     <span className={`truncate ${isSelected ? 'font-bold' : ''}`}>
                       {option.label}
                     </span>
                     {option.hint && (
-                      <span className="shrink-0 text-xs text-neutral-500 truncate max-w-[45%]">
+                      <span className="shrink-0 text-xs text-ink-500 truncate max-w-[45%]">
                         {option.hint}
                       </span>
                     )}

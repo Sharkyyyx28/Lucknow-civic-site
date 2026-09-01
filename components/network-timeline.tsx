@@ -114,7 +114,7 @@ export default function NetworkTimeline({
           className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
             month === todayMonth
               ? 'bg-black text-white border-black'
-              : 'bg-white text-black border-gray-300 hover:border-black'
+              : 'bg-white text-black border-ink-300 hover:border-black'
           }`}
         >
           Today
@@ -125,7 +125,7 @@ export default function NetworkTimeline({
             if (month >= LAST_MONTH) onMonthChange(FIRST_MONTH)
             onPlayingChange(!playing)
           }}
-          className="px-3 py-1.5 rounded-full text-sm font-medium border border-gray-300 bg-white text-black hover:border-black transition-colors"
+          className="px-3 py-1.5 rounded-full text-sm font-medium border border-ink-300 bg-white text-black hover:border-black transition-colors"
           aria-label={playing ? 'Pause the timeline' : 'Play the timeline from here'}
         >
           {playing ? '❙❙ Pause' : '▶ Play'}
@@ -136,7 +136,7 @@ export default function NetworkTimeline({
             onPlayingChange(false)
             onMonthChange(FIRST_MONTH)
           }}
-          className="px-3 py-1.5 rounded-full text-sm font-medium border border-gray-300 bg-white text-black hover:border-black transition-colors"
+          className="px-3 py-1.5 rounded-full text-sm font-medium border border-ink-300 bg-white text-black hover:border-black transition-colors"
         >
           ⏮ 2011
         </button>
@@ -148,7 +148,7 @@ export default function NetworkTimeline({
             whole page hop as it flips between one line and two. */}
         <div className="ml-auto text-right min-w-[160px] md:min-w-[210px]">
           <div className="text-lg md:text-2xl font-bold leading-tight">{formatMonth(monthLabel(month))}</div>
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-ink-500">
             {month === todayMonth ? 'the network as it stands today' : month < todayMonth ? 'looking back' : 'looking ahead'}
           </div>
         </div>
@@ -184,11 +184,11 @@ export default function NetworkTimeline({
           ))}
           {/* Where "now" falls on the scale, so the past/future split is visible. */}
           <span
-            className="absolute bottom-0 -translate-x-1/2 border-l-2 border-dashed border-gray-900"
+            className="absolute bottom-0 -translate-x-1/2 border-l-2 border-dashed border-ink-900"
             style={{ left: `${todayPct}%`, height: 24 }}
           />
           <span
-            className="absolute -translate-x-1/2 text-[10px] font-semibold text-gray-900"
+            className="absolute -translate-x-1/2 text-[10px] font-semibold text-ink-900"
             style={{ left: `${todayPct}%`, top: -2 }}
           >
             now
@@ -217,12 +217,12 @@ export default function NetworkTimeline({
           {YEARS.map(({ year, pct }) => (
             <span key={year} className="absolute top-0 -translate-x-1/2" style={{ left: `${pct}%` }}>
               <span
-                className="block mx-auto bg-gray-300"
+                className="block mx-auto bg-ink-300"
                 style={{ width: 1, height: year % 5 === 0 ? 8 : 4 }}
               />
               <span
                 className={`block text-[10px] leading-none mt-0.5 ${
-                  year % 5 === 0 ? 'text-gray-600 font-medium' : 'text-gray-400 hidden xl:block'
+                  year % 5 === 0 ? 'text-ink-600 font-medium' : 'text-ink-400 hidden xl:block'
                 }`}
               >
                 {year % 5 === 0 ? year : `’${String(year).slice(2)}`}
@@ -232,9 +232,9 @@ export default function NetworkTimeline({
         </div>
       </div>
 
-      <p className="text-xs text-gray-500 mt-1">
+      <p className="text-xs text-ink-500 mt-1">
         Each tick is an opening. Taller ticks are months where more than one stretch opens. Drag past{' '}
-        <span className="font-semibold text-gray-700">now</span> and the map switches to what has been announced — dates
+        <span className="font-semibold text-ink-700">now</span> and the map switches to what has been announced — dates
         no one has yet delivered.{' '}
         <span className="whitespace-nowrap">
           Nearest event: {nearest.milestones[0].lineName}, {formatDay(nearest.milestones[0].date)}.

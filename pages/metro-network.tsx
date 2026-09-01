@@ -56,7 +56,7 @@ export default function MetroNetworkPage() {
       <Container>
         <Header headerText="Rail network timeline" headerLink="/metro-network" />
         <article className="mb-24">
-          <p className="max-w-3xl text-base md:text-lg text-gray-600 mb-6">
+          <p className="max-w-3xl text-base md:text-lg text-ink-600 mb-6">
             Every Lucknow Metro line and every Lucknow Suburban Rail corridor on one map — what is carrying passengers,
             what is being built, and what is only approved. Drag the timeline to any month between October 2011 and the
             end of the announced programme and the map redraws to that date.
@@ -71,10 +71,10 @@ export default function MetroNetworkPage() {
 function ExplorerSkeleton() {
   return (
     <div aria-hidden="true">
-      <div className="h-24 bg-gray-50 border border-gray-200 rounded-lg mb-6" />
+      <div className="h-24 bg-ink-50 border border-ink-200 rounded-lg mb-6" />
       <div className="grid gap-6 xl:grid-cols-[minmax(0,2.15fr)_minmax(0,1fr)]">
-        <div className="h-[clamp(420px,68vh,760px)] bg-gray-50 border border-gray-200 rounded-lg" />
-        <div className="hidden xl:block bg-gray-50 border border-gray-200 rounded-lg" />
+        <div className="h-[clamp(420px,68vh,760px)] bg-ink-50 border border-ink-200 rounded-lg" />
+        <div className="hidden xl:block bg-ink-50 border border-ink-200 rounded-lg" />
       </div>
     </div>
   )
@@ -151,7 +151,7 @@ function NetworkExplorer({ today }: { today: string }) {
             </p>
           )}
           {isToday && totals.projectedKm === 0 && (
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-ink-600">
               Solid lines are open and running as of {formatDay(today)}. Faint dashes are corridors that exist only on
               paper — drag the timeline forward to see when each is meant to arrive.
             </p>
@@ -167,7 +167,7 @@ function NetworkExplorer({ today }: { today: string }) {
                 className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
                   modes.has(mode)
                     ? 'bg-black text-white border-black'
-                    : 'bg-white text-gray-500 border-gray-300 hover:border-black hover:text-black'
+                    : 'bg-white text-ink-500 border-ink-300 hover:border-black hover:text-black'
                 }`}
               >
                 {MODE_LABEL[mode]}
@@ -177,7 +177,7 @@ function NetworkExplorer({ today }: { today: string }) {
               <button
                 type="button"
                 onClick={() => setFocus(null)}
-                className="px-3 py-1.5 rounded-full text-sm font-medium border border-gray-300 bg-white text-black hover:border-black transition-colors"
+                className="px-3 py-1.5 rounded-full text-sm font-medium border border-ink-300 bg-white text-black hover:border-black transition-colors"
               >
                 Clear highlight
               </button>
@@ -208,8 +208,8 @@ function NetworkExplorer({ today }: { today: string }) {
                       opacity: openOnDate ? 1 : 0.35,
                     }}
                   />
-                  <span className={openOnDate ? 'text-gray-900' : 'text-gray-400'}>{line.name}</span>
-                  {openOnDate && !fullyOpen && <span className="text-xs text-gray-400">part</span>}
+                  <span className={openOnDate ? 'text-ink-900' : 'text-ink-400'}>{line.name}</span>
+                  {openOnDate && !fullyOpen && <span className="text-xs text-ink-400">part</span>}
                 </button>
               </li>
             )
@@ -234,7 +234,7 @@ function NetworkExplorer({ today }: { today: string }) {
               ))}
             </ol>
           ) : (
-            <p className="text-sm text-gray-500">Nothing had opened yet on this date.</p>
+            <p className="text-sm text-ink-500">Nothing had opened yet on this date.</p>
           )}
         </section>
 
@@ -260,7 +260,7 @@ function NetworkExplorer({ today }: { today: string }) {
               ))}
             </ol>
           ) : (
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-ink-500">
               Nothing further is announced. This is the whole programme as it currently stands.
             </p>
           )}
@@ -270,9 +270,9 @@ function NetworkExplorer({ today }: { today: string }) {
       {/* Provenance — what this map can and cannot be trusted for. Full width
           now, with the prose in columns so it fills the row without any single
           line running the whole 1500px. */}
-      <details className="border border-gray-200 rounded-lg p-4">
+      <details className="border border-ink-200 rounded-lg p-4">
         <summary className="cursor-pointer font-semibold">Where this data comes from, and what it is not</summary>
-        <div className="mt-3 text-sm text-gray-600 grid gap-x-10 gap-y-3 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-3 text-sm text-ink-600 grid gap-x-10 gap-y-3 md:grid-cols-2 xl:grid-cols-3">
               <p>
                 <strong>Operational lines</strong> — Purple, Green and Yellow station positions come from
                 OpenStreetMap route relations, so they are real surveyed locations. Their opening dates are recorded
@@ -311,9 +311,9 @@ function NetworkExplorer({ today }: { today: string }) {
 
 function Stat({ value, label }: { value: number | string; label: string }) {
   return (
-    <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-3 md:py-4 text-center">
+    <div className="bg-ink-50 border border-ink-200 rounded-lg px-3 py-3 md:py-4 text-center">
       <div className="text-2xl md:text-4xl font-bold leading-none">{value}</div>
-      <div className="text-xs md:text-sm uppercase tracking-wide text-gray-500 mt-1">{label}</div>
+      <div className="text-xs md:text-sm uppercase tracking-wide text-ink-500 mt-1">{label}</div>
     </div>
   )
 }
@@ -322,7 +322,7 @@ function SectionHeading({ title, aside }: { title: string; aside?: string }) {
   return (
     <h3 className="text-lg font-semibold mb-3 flex flex-wrap items-baseline gap-x-2">
       {title}
-      {aside && <span className="text-sm font-normal text-gray-400">{aside}</span>}
+      {aside && <span className="text-sm font-normal text-ink-400">{aside}</span>}
     </h3>
   )
 }
@@ -377,11 +377,11 @@ function MilestoneRow({
         >
           {milestone.label}
         </button>
-        <div className="text-xs text-gray-500 mt-0.5">
+        <div className="text-xs text-ink-500 mt-0.5">
           {milestone.lineName} · {milestone.stationCount} station{milestone.stationCount === 1 ? '' : 's'}
           {milestone.lengthKm ? ` · ${milestone.lengthKm} km` : ''}
         </div>
-        {milestone.note && <p className="text-xs text-gray-400 leading-snug mt-1">{milestone.note}</p>}
+        {milestone.note && <p className="text-xs text-ink-400 leading-snug mt-1">{milestone.note}</p>}
       </div>
     </li>
   )
@@ -390,10 +390,10 @@ function MilestoneRow({
 function DateStack({ day, mon, year }: { day: string; mon: string; year: string }) {
   return (
     <>
-      <span className="block text-sm font-medium tabular-nums leading-tight text-gray-700">
+      <span className="block text-sm font-medium tabular-nums leading-tight text-ink-700">
         {day} {mon}
       </span>
-      <span className="block text-xs tabular-nums leading-tight text-gray-400">{year}</span>
+      <span className="block text-xs tabular-nums leading-tight text-ink-400">{year}</span>
     </>
   )
 }

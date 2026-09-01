@@ -6,44 +6,48 @@ module.exports = {
       // Semantic tokens, so the palette can be re-pitched from this one block
       // rather than swept across every component.
       //
-      // `brand` is a deep survey teal and `accent` a warm ochre — the two inks
-      // a printed city map is drawn in. `ink` is a warm near-black; pairing it
-      // with the warm `paper` off-white keeps the page from going clinical.
+      // The palette is Lucknow's own, not a generic survey one. `brand` is a
+      // deep indigo — nil, the dye Awadh traded in, and the register ink a
+      // civic record is kept in. `accent` is marigold, the genda strung over
+      // every gate in the city. `ink` is a warm charcoal sitting on the cream
+      // of chikankari muslin, which keeps the page from going clinical.
       colors: {
         brand: {
-          50: '#f0fdfa',
-          100: '#ccfbf1',
-          200: '#99f6e4',
-          300: '#5eead4',
-          400: '#2dd4bf',
-          500: '#14b8a6',
-          600: '#0d9488',
-          700: '#0f766e',
-          800: '#115e59',
-          900: '#134e4a',
+          50: '#f2f4fc',
+          100: '#e3e7f8',
+          200: '#c8d0f0',
+          300: '#a2b0e4',
+          400: '#7688d3',
+          500: '#5364bd',
+          600: '#3f4da3',
+          700: '#333e84',
+          800: '#2b3369',
+          900: '#232847',
         },
         accent: {
-          100: '#fef3c7',
-          200: '#fde68a',
-          300: '#fcd34d',
-          400: '#fbbf24',
-          500: '#f59e0b',
-          600: '#d97706',
-          700: '#b45309',
+          50: '#fff8ec',
+          100: '#feefd2',
+          200: '#fcdb9d',
+          300: '#f9c266',
+          400: '#f5a52f',
+          500: '#e88b10',
+          600: '#c96f08',
+          700: '#a1550c',
+          800: '#7d4210',
         },
         ink: {
-          50: '#fafaf9',
-          100: '#f5f5f4',
-          200: '#e7e5e4',
-          300: '#d6d3d1',
-          400: '#a8a29e',
-          500: '#78716c',
-          600: '#57534e',
-          700: '#44403c',
-          800: '#292524',
-          900: '#1c1917',
+          50: '#faf8f4',
+          100: '#f3f0e9',
+          200: '#e6e1d5',
+          300: '#d3ccbc',
+          400: '#a9a293',
+          500: '#6f6858',
+          600: '#5c5648',
+          700: '#453f34',
+          800: '#2b271f',
+          900: '#1b1813',
         },
-        success: '#0070f3',
+        success: '#2f7d4f',
       },
       fontFamily: {
         // Space Grotesk sets the headlines; Inter does the reading. Deliberately
@@ -101,8 +105,11 @@ module.exports = {
         '8xl': '6.25rem',
       },
       boxShadow: {
-        sm: '0 5px 10px rgba(0, 0, 0, 0.12)',
-        md: '0 8px 30px rgba(0, 0, 0, 0.12)',
+        // Shadows are cast in warm ink rather than pure black, so a card lifts
+        // off the cream ground without a grey halo appearing around it.
+        sm: '0 1px 2px rgba(27, 24, 19, 0.05), 0 4px 12px -6px rgba(27, 24, 19, 0.14)',
+        md: '0 2px 4px rgba(27, 24, 19, 0.05), 0 12px 32px -14px rgba(27, 24, 19, 0.22)',
+        sheet: '0 1px 0 rgba(27, 24, 19, 0.04), 0 18px 48px -24px rgba(35, 40, 71, 0.35)',
       },
     },
   },

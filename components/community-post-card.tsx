@@ -51,11 +51,11 @@ function excerpt(body: string, max = 220): string {
 }
 
 const CommunityPostCard = ({ post }: { post: CommunityPost }) => (
-  <article className="border border-neutral-200 p-5 hover:border-neutral-400 duration-200 transition-colors">
+  <article className="border border-ink-200 p-5 hover:border-ink-400 duration-200 transition-colors">
     <div className="flex flex-wrap items-center gap-2 mb-3">
       <CategoryChip category={post.category} />
       {post.isAuthor && (
-        <span className="border border-neutral-300 bg-neutral-50 px-2 py-1 text-xs text-neutral-600">
+        <span className="border border-ink-300 bg-ink-50 px-2 py-1 text-xs text-ink-600">
           Your post
         </span>
       )}
@@ -67,15 +67,15 @@ const CommunityPostCard = ({ post }: { post: CommunityPost }) => (
       </Link>
     </h2>
 
-    <p className="text-sm text-neutral-600 mb-3">
+    <p className="text-sm text-ink-600 mb-3">
       📍 {wardDisplayName(post.wardName)}
       {post.corporation ? ` · ${post.corporation}` : ''}
       {post.placeLabel ? ` · ${post.placeLabel}` : ''}
     </p>
 
-    <p className="text-neutral-700 mb-4">{excerpt(post.body)}</p>
+    <p className="text-ink-700 mb-4">{excerpt(post.body)}</p>
 
-    <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-neutral-500">
+    <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-ink-500">
       <span>
         {post.authorName} · {formatPostDate(post.createdAt)}
       </span>

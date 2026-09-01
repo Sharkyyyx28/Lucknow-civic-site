@@ -46,20 +46,20 @@ function formatDistance(meters: number): string {
 // Shared field/button styling, so the forms on this page look like the rest of
 // the site: square corners, neutral borders, black primary action.
 const INPUT =
-  'w-full border border-neutral-300 px-3 py-2 duration-200 transition-colors focus:outline-none focus:border-black'
+  'w-full border border-ink-300 px-3 py-2 duration-200 transition-colors focus:outline-none focus:border-black'
 const PRIMARY_BTN =
   'bg-black hover:bg-white hover:text-black border border-black text-white font-bold py-2 px-6 duration-200 transition-colors disabled:opacity-40 disabled:pointer-events-none'
 const SMALL_BTN =
   'bg-black hover:bg-white hover:text-black border border-black text-white text-sm font-bold py-1.5 px-4 duration-200 transition-colors disabled:opacity-40 disabled:pointer-events-none'
-const QUIET_BTN = 'text-sm text-neutral-500 hover:text-black hover:underline'
+const QUIET_BTN = 'text-sm text-ink-500 hover:text-black hover:underline'
 const INLINE_BTN =
-  'shrink-0 flex items-center gap-1 text-xs text-neutral-600 hover:text-black hover:underline disabled:opacity-40 whitespace-nowrap'
+  'shrink-0 flex items-center gap-1 text-xs text-ink-600 hover:text-black hover:underline disabled:opacity-40 whitespace-nowrap'
 
 /** One ward fact — ward number, corporation, constituency, pincodes. */
 const Chip = ({ label, value }: { label: string; value: string }) => (
-  <span className="inline-flex items-baseline gap-1.5 border border-neutral-200 bg-neutral-50 px-2 py-1 text-xs">
-    <span className="font-semibold text-neutral-500">{label}</span>
-    <span className="text-neutral-800">{value}</span>
+  <span className="inline-flex items-baseline gap-1.5 border border-ink-200 bg-ink-50 px-2 py-1 text-xs">
+    <span className="font-semibold text-ink-500">{label}</span>
+    <span className="text-ink-800">{value}</span>
   </span>
 )
 
@@ -78,13 +78,13 @@ const AmenityTile = ({
   primary: string
   secondary: string
 }) => (
-  <div className="border border-neutral-200 p-3">
-    <div className="flex items-center gap-1.5 text-xs text-neutral-500 mb-1">
+  <div className="border border-ink-200 p-3">
+    <div className="flex items-center gap-1.5 text-xs text-ink-500 mb-1">
       <span aria-hidden="true">{icon}</span>
       <span className="truncate">{label}</span>
     </div>
     <div className="text-lg font-bold tracking-tighter leading-tight">{primary}</div>
-    <div className="text-xs text-neutral-500 truncate" title={secondary}>
+    <div className="text-xs text-ink-500 truncate" title={secondary}>
       {secondary}
     </div>
   </div>
@@ -454,8 +454,8 @@ export default function ProfilePage() {
       <Layout preview={false}>
         <Container>
           <div className="max-w-3xl mx-auto py-24" aria-busy="true">
-            <div className="h-9 w-56 bg-neutral-100 animate-pulse mb-4" />
-            <div className="h-4 w-72 bg-neutral-100 animate-pulse" />
+            <div className="h-9 w-56 bg-ink-100 animate-pulse mb-4" />
+            <div className="h-4 w-72 bg-ink-100 animate-pulse" />
             <span className="sr-only">Loading your profile…</span>
           </div>
         </Container>
@@ -472,7 +472,7 @@ export default function ProfilePage() {
             <h1 className="text-4xl md:text-5xl font-bold tracking-tighter leading-tight mb-4">
               Your places
             </h1>
-            <p className="text-lg text-neutral-700 mb-8">
+            <p className="text-lg text-ink-700 mb-8">
               Save your home, your office, or anywhere else in Lucknow. For each one you
               get the ward it falls in, its pincodes, and the civic amenities closest to it.
             </p>
@@ -480,7 +480,7 @@ export default function ProfilePage() {
               {AMENITY_LABELS.map(([key, icon, label]) => (
                 <li
                   key={key}
-                  className="flex items-center gap-2 border border-neutral-200 px-3 py-2 text-sm"
+                  className="flex items-center gap-2 border border-ink-200 px-3 py-2 text-sm"
                 >
                   <span aria-hidden="true">{icon}</span>
                   {label}
@@ -490,7 +490,7 @@ export default function ProfilePage() {
             <button onClick={() => signIn('google')} className={PRIMARY_BTN}>
               Sign in with Google
             </button>
-            <p className="text-sm text-neutral-500 mt-4">
+            <p className="text-sm text-ink-500 mt-4">
               We keep your name, the email you sign in with, and the places you save.
               Nothing else.
             </p>
@@ -559,7 +559,7 @@ export default function ProfilePage() {
           </button>
         </div>
         {newLat != null && newLng != null && (
-          <p className="text-xs text-neutral-500 mt-2">
+          <p className="text-xs text-ink-500 mt-2">
             📍 Pinned: {newLat.toFixed(5)}, {newLng.toFixed(5)}{' '}
             <button
               type="button"
@@ -577,7 +577,7 @@ export default function ProfilePage() {
         )}
         {locateNewError && <p className="text-amber-600 text-xs mt-2">{locateNewError}</p>}
         {!showNewPicker && newLat == null && (
-          <p className="text-xs text-neutral-500 mt-2">
+          <p className="text-xs text-ink-500 mt-2">
             A pin is optional — without one you get ward-wide counts instead of distances.
           </p>
         )}
@@ -658,7 +658,7 @@ export default function ProfilePage() {
                       {name || 'Your places'}
                     </h1>
                     {session?.user?.email && (
-                      <p className="text-sm text-neutral-500 truncate">{session.user.email}</p>
+                      <p className="text-sm text-ink-500 truncate">{session.user.email}</p>
                     )}
                   </div>
                   <button
@@ -675,11 +675,11 @@ export default function ProfilePage() {
 
           {/* Saved places */}
           <section>
-            <div className="flex items-end justify-between gap-4 border-b border-neutral-200 pb-3 mb-6">
+            <div className="flex items-end justify-between gap-4 border-b border-ink-200 pb-3 mb-6">
               <h2 className="text-2xl font-bold tracking-tighter">
                 Saved places{' '}
                 {locations.length > 0 && (
-                  <span className="text-neutral-400 font-normal">{locations.length}</span>
+                  <span className="text-ink-400 font-normal">{locations.length}</span>
                 )}
               </h2>
               {locations.length > 0 && (
@@ -694,13 +694,13 @@ export default function ProfilePage() {
             </div>
 
             {addFormOpen && (
-              <div className="border border-neutral-300 p-5 md:p-6 mb-8">
+              <div className="border border-ink-300 p-5 md:p-6 mb-8">
                 {locations.length === 0 && (
                   <>
                     <h3 className="text-lg font-bold tracking-tighter mb-1">
                       Add your first place
                     </h3>
-                    <p className="text-sm text-neutral-600 mb-5">
+                    <p className="text-sm text-ink-600 mb-5">
                       Pick a ward from the list, or drop a pin and we&apos;ll work out the
                       ward for you.
                     </p>
@@ -727,7 +727,7 @@ export default function ProfilePage() {
                     <form
                       key={loc.id}
                       onSubmit={handleSaveEdit}
-                      className="border border-neutral-300 p-5 space-y-3"
+                      className="border border-ink-300 p-5 space-y-3"
                     >
                       <input
                         type="text"
@@ -774,7 +774,7 @@ export default function ProfilePage() {
                         </button>
                       </div>
                       {editLat != null && editLng != null && (
-                        <p className="text-xs text-neutral-500">
+                        <p className="text-xs text-ink-500">
                           📍 Pinned: {editLat.toFixed(5)}, {editLng.toFixed(5)}{' '}
                           <button
                             type="button"
@@ -814,13 +814,13 @@ export default function ProfilePage() {
                     : []
 
                 return (
-                  <article key={loc.id} className="border border-neutral-200 p-5">
+                  <article key={loc.id} className="border border-ink-200 p-5">
                     <div className="flex items-start justify-between gap-4">
                       <div className="min-w-0">
                         <h3 className="text-xl font-bold tracking-tighter leading-tight">
                           {loc.label}
                         </h3>
-                        <p className="text-sm text-neutral-600">
+                        <p className="text-sm text-ink-600">
                           {loc.wardName}
                           {meta?.wardNameKannada ? ` · ${meta.wardNameKannada}` : ''}
                         </p>
@@ -828,7 +828,7 @@ export default function ProfilePage() {
                       <div className="flex items-center gap-3 shrink-0 text-xs">
                         {confirmDeleteId === loc.id ? (
                           <>
-                            <span className="text-neutral-500">Remove?</span>
+                            <span className="text-ink-500">Remove?</span>
                             <button
                               onClick={() => handleDelete(loc.id)}
                               disabled={deletingId === loc.id}
@@ -838,7 +838,7 @@ export default function ProfilePage() {
                             </button>
                             <button
                               onClick={() => setConfirmDeleteId(null)}
-                              className="text-neutral-500 hover:text-black hover:underline"
+                              className="text-ink-500 hover:text-black hover:underline"
                             >
                               No
                             </button>
@@ -847,13 +847,13 @@ export default function ProfilePage() {
                           <>
                             <button
                               onClick={() => startEdit(loc)}
-                              className="text-neutral-500 hover:text-black hover:underline"
+                              className="text-ink-500 hover:text-black hover:underline"
                             >
                               Edit
                             </button>
                             <button
                               onClick={() => setConfirmDeleteId(loc.id)}
-                              className="text-neutral-500 hover:text-red-600 hover:underline"
+                              className="text-ink-500 hover:text-red-600 hover:underline"
                             >
                               Remove
                             </button>
@@ -873,7 +873,7 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="mt-5">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400 mb-2">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-ink-400 mb-2">
                         {/* Falls back to ward-wide counts when a pinned
                             location has no per-amenity items to measure from. */}
                         {nearest.length ? 'Nearest to your pin' : 'Across this ward'}
@@ -882,7 +882,7 @@ export default function ProfilePage() {
                       {amenitiesLoading ? (
                         <div className="grid grid-cols-2 gap-3" aria-busy="true">
                           {AMENITY_LABELS.map(([key]) => (
-                            <div key={key} className="h-20 bg-neutral-100 animate-pulse" />
+                            <div key={key} className="h-20 bg-ink-100 animate-pulse" />
                           ))}
                           <span className="sr-only">Loading amenities…</span>
                         </div>
@@ -915,20 +915,20 @@ export default function ProfilePage() {
                           ))}
                         </div>
                       ) : (
-                        <p className="text-sm text-neutral-500">
+                        <p className="text-sm text-ink-500">
                           No amenity data for this ward yet.
                         </p>
                       )}
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-between gap-3 mt-5 pt-4 border-t border-neutral-100">
+                    <div className="flex flex-wrap items-center justify-between gap-3 mt-5 pt-4 border-t border-ink-100">
                       <Link
                         href={`/map?ward=${encodeURIComponent(loc.wardName)}`}
                         className="text-sm font-bold hover:underline"
                       >
                         View on the map →
                       </Link>
-                      <span className="text-xs text-neutral-500">
+                      <span className="text-xs text-ink-500">
                         {pinLat != null && pinLng != null ? (
                           <>📍 {pinLat.toFixed(5)}, {pinLng.toFixed(5)}</>
                         ) : (
@@ -943,7 +943,7 @@ export default function ProfilePage() {
           </section>
 
           {savedAt && (
-            <p className="text-xs text-neutral-400 mt-12">
+            <p className="text-xs text-ink-400 mt-12">
               Profile last saved {new Date(savedAt).toLocaleString()}
             </p>
           )}

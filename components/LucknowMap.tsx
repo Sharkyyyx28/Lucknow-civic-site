@@ -168,7 +168,7 @@ export default function LucknowMap() {
       )}
 
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[999] pointer-events-none">
-        <span className="bg-white/90 text-xs font-medium px-3 py-1 rounded-full shadow text-gray-600">
+        <span className="bg-white/90 text-xs font-medium px-3 py-1 rounded-full shadow text-ink-600">
           Click anywhere to see the address & pincode
         </span>
       </div>

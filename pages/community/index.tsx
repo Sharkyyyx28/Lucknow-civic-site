@@ -153,7 +153,7 @@ export default function CommunityFeedPage() {
               <h1 className="text-4xl md:text-5xl font-bold tracking-tighter leading-tight mb-2">
                 Community
               </h1>
-              <p className="text-lg text-neutral-700">
+              <p className="text-lg text-ink-700">
                 What people are reporting about their part of Lucknow — a road that needs
                 repair, a park worth visiting, a footpath that finally got fixed.
               </p>
@@ -163,11 +163,11 @@ export default function CommunityFeedPage() {
             </Link>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 border-t border-b border-neutral-200 py-4 mb-2">
+          <div className="flex flex-col sm:flex-row gap-3 border-t border-b border-ink-200 py-4 mb-2">
             <div className="flex-1 min-w-0">
               <label
                 htmlFor="scope"
-                className="block text-xs font-semibold uppercase tracking-wide text-neutral-400 mb-1"
+                className="block text-xs font-semibold uppercase tracking-wide text-ink-400 mb-1"
               >
                 Where
               </label>
@@ -184,7 +184,7 @@ export default function CommunityFeedPage() {
             </div>
 
             <label className="sm:w-56">
-              <span className="block text-xs font-semibold uppercase tracking-wide text-neutral-400 mb-1">
+              <span className="block text-xs font-semibold uppercase tracking-wide text-ink-400 mb-1">
                 Kind of post
               </span>
               <select
@@ -200,7 +200,7 @@ export default function CommunityFeedPage() {
             </label>
           </div>
 
-          <p className="text-sm text-neutral-500 mb-8">
+          <p className="text-sm text-ink-500 mb-8">
             {scopeDescription()}
             {!loading && !scopeUnresolved && total > 0 && (
               <> {total} {total === 1 ? 'post' : 'posts'}.</>
@@ -210,7 +210,7 @@ export default function CommunityFeedPage() {
           {loading ? (
             <div className="space-y-6" aria-busy="true">
               {[0, 1, 2].map(i => (
-                <div key={i} className="h-40 bg-neutral-100 animate-pulse" />
+                <div key={i} className="h-40 bg-ink-100 animate-pulse" />
               ))}
               <span className="sr-only">Loading posts…</span>
             </div>
@@ -222,11 +222,11 @@ export default function CommunityFeedPage() {
               </button>
             </div>
           ) : scopeUnresolved ? (
-            <div className="border border-neutral-300 p-6">
+            <div className="border border-ink-300 p-6">
               <h2 className="text-lg font-bold tracking-tighter mb-1">
                 Tell us where you live first
               </h2>
-              <p className="text-sm text-neutral-600 mb-4">
+              <p className="text-sm text-ink-600 mb-4">
                 Save a place on your profile and this feed will show what your neighbours are
                 posting about that ward.
               </p>
@@ -235,9 +235,9 @@ export default function CommunityFeedPage() {
               </Link>
             </div>
           ) : posts.length === 0 ? (
-            <div className="border border-neutral-300 p-6">
+            <div className="border border-ink-300 p-6">
               <h2 className="text-lg font-bold tracking-tighter mb-1">Nothing here yet</h2>
-              <p className="text-sm text-neutral-600 mb-4">
+              <p className="text-sm text-ink-600 mb-4">
                 No posts match this filter. Be the first to write about what is going on around
                 you — or widen the search to all of Lucknow.
               </p>
@@ -249,7 +249,7 @@ export default function CommunityFeedPage() {
                   <button
                     type="button"
                     onClick={() => { setScope('all'); setScopeTouched(true) }}
-                    className="text-sm text-neutral-500 hover:text-black hover:underline"
+                    className="text-sm text-ink-500 hover:text-black hover:underline"
                   >
                     Show all of Lucknow
                   </button>

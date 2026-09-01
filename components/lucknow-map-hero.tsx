@@ -6,8 +6,8 @@
  * split does not exist here and drawing one would be inventing an
  * administrative boundary that isn't real. This version draws a single
  * rounded outline (a stylised stand-in for the city, not a traced boundary)
- * with a centre pin, compass rose and scale bar, kept from the original for
- * visual consistency with the rest of the site.
+ * with a centre pin, compass rose and scale bar, inked in the site palette
+ * so it reads as a sheet from the same register as everything else.
  */
 
 const SIZE = 400
@@ -29,14 +29,14 @@ const LucknowCorpMap = () => {
       >
         <defs>
           <filter id="city-shadow" x="-8%" y="-8%" width="116%" height="116%">
-            <feDropShadow dx="0" dy="1" stdDeviation="3" floodColor="#1e293b" floodOpacity="0.10" />
+            <feDropShadow dx="0" dy="1" stdDeviation="3" floodColor="#1b1813" floodOpacity="0.10" />
           </filter>
         </defs>
 
         {/* Filled region — fades in */}
         <path
           d={CITY_OUTLINE_D}
-          fill="#fee2e2"
+          fill="#e3e7f8"
           fillOpacity="0.88"
           filter="url(#city-shadow)"
           style={{ animation: 'cityFade 0.5s ease-out forwards', opacity: 0 }}
@@ -45,7 +45,7 @@ const LucknowCorpMap = () => {
         {/* Boundary stroke — draws on */}
         <path
           d={CITY_OUTLINE_D}
-          stroke="#b91c1c"
+          stroke="#333e84"
           strokeWidth="2"
           strokeLinejoin="round"
           fill="none"
@@ -64,7 +64,7 @@ const LucknowCorpMap = () => {
           dominantBaseline="middle"
           fontSize="13"
           fontWeight="700"
-          fill="#7f1d1d"
+          fill="#2b3369"
           fontFamily="var(--font-inter), system-ui, sans-serif"
           letterSpacing="0.12em"
           style={{
@@ -81,7 +81,7 @@ const LucknowCorpMap = () => {
           textAnchor="middle"
           dominantBaseline="middle"
           fontSize="8"
-          fill="#991b1b"
+          fill="#3f4da3"
           fontFamily="var(--font-inter), system-ui, sans-serif"
           style={{
             animation: 'cityFade 0.4s ease-out 0.7s forwards',
@@ -100,12 +100,12 @@ const LucknowCorpMap = () => {
         >
           <circle
             cx="218" cy="205" r="16"
-            stroke="#d97706" strokeWidth="1" fill="none" opacity="0.25"
+            stroke="#c96f08" strokeWidth="1" fill="none" opacity="0.25"
             style={{ animation: 'ripple 2.6s ease-out 1.6s infinite' }}
           />
-          <circle cx="218" cy="205" r="8" stroke="#d97706" strokeWidth="1" fill="none" opacity="0.4" />
-          <circle cx="218" cy="205" r="3.5" fill="#d97706" />
-          <circle cx="218" cy="205" r="1.3" fill="#fef3c7" />
+          <circle cx="218" cy="205" r="8" stroke="#c96f08" strokeWidth="1" fill="none" opacity="0.4" />
+          <circle cx="218" cy="205" r="3.5" fill="#c96f08" />
+          <circle cx="218" cy="205" r="1.3" fill="#feefd2" />
         </g>
 
         {/* ── Compass rose (bottom-right) ── */}
@@ -113,23 +113,23 @@ const LucknowCorpMap = () => {
           transform="translate(378, 378)"
           style={{ animation: 'cityFade 0.4s ease-out 1.4s forwards', opacity: 0 }}
         >
-          <line x1="0" y1="-12" x2="0" y2="12" stroke="#78716c" strokeWidth="1" />
-          <line x1="-12" y1="0" x2="12" y2="0" stroke="#78716c" strokeWidth="1" />
-          <polygon points="0,-12 -2.8,-6.5 2.8,-6.5" fill="#78716c" />
+          <line x1="0" y1="-12" x2="0" y2="12" stroke="#6f6858" strokeWidth="1" />
+          <line x1="-12" y1="0" x2="12" y2="0" stroke="#6f6858" strokeWidth="1" />
+          <polygon points="0,-12 -2.8,-6.5 2.8,-6.5" fill="#6f6858" />
           <text
             x="0" y="-15" textAnchor="middle" fontSize="6.5"
-            fill="#78716c" fontFamily="var(--font-inter), system-ui" fontWeight="600"
+            fill="#6f6858" fontFamily="var(--font-inter), system-ui" fontWeight="600"
           >N</text>
         </g>
 
         {/* ── Scale bar (bottom-left) ── */}
         <g style={{ animation: 'cityFade 0.4s ease-out 1.4s forwards', opacity: 0 }}>
-          <line x1="20" y1="388" x2="68" y2="388" stroke="#78716c" strokeWidth="1.5" />
-          <line x1="20" y1="384" x2="20" y2="392" stroke="#78716c" strokeWidth="1.5" />
-          <line x1="68" y1="384" x2="68" y2="392" stroke="#78716c" strokeWidth="1.5" />
+          <line x1="20" y1="388" x2="68" y2="388" stroke="#6f6858" strokeWidth="1.5" />
+          <line x1="20" y1="384" x2="20" y2="392" stroke="#6f6858" strokeWidth="1.5" />
+          <line x1="68" y1="384" x2="68" y2="392" stroke="#6f6858" strokeWidth="1.5" />
           <text
             x="44" y="398" textAnchor="middle" fontSize="6.5"
-            fill="#78716c" fontFamily="var(--font-inter), system-ui"
+            fill="#6f6858" fontFamily="var(--font-inter), system-ui"
           >~10 km</text>
         </g>
       </svg>

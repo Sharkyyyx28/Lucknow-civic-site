@@ -55,14 +55,14 @@
     inset-block: 0;
     inset-inline-start: 0;
     width: 3px;
-    background: theme('colors.brand.600');
+    background: theme('colors.accent.500');
     transform: scaleY(0);
     transform-origin: top;
     transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   .card-mark:hover {
-    border-color: theme('colors.brand.300');
+    border-color: theme('colors.brand.200');
     background-color: theme('colors.brand.50');
   }
 
@@ -146,21 +146,21 @@
 
 /* Alternating row colors */
 .ReactVirtualized__Table__row {
-  border-bottom: 1px solid #e7e5e4;
+  border-bottom: 1px solid #e6e1d5;
   transition: background-color 0.15s ease;
 }
 
 .ReactVirtualized__Table__row:nth-child(odd) {
-  background-color: #fafaf9;
+  background-color: #faf8f4;
 }
 
 .ReactVirtualized__Table__row:hover {
-  background-color: #ccfbf1;
+  background-color: #e3e7f8;
 }
 
 /* Header styles */
 .ReactVirtualized__Table__headerRow {
-  background-color: #0f766e;
+  background-color: #333e84;
   color: white;
   font-weight: bold;
   text-transform: uppercase;

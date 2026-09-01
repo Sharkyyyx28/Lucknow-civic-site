@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import CountUp from './count-up'
+import HeroBackdrop from './hero-backdrop'
 import LucknowCorpMap from './lucknow-map-hero'
 
 const STATS: Array<[string, string]> = [
@@ -12,20 +13,34 @@ const STATS: Array<[string, string]> = [
 // Sibling stagger classes, applied in order to the stat figures.
 const STAGGER = ['stagger-1', 'stagger-2', 'stagger-3', 'stagger-4']
 
+// Registration marks, the way a printed sheet is trimmed. Two hairlines per
+// corner rather than a full border, so the map reads as something laid on the
+// page instead of something boxed in.
+const TICKS = [
+  'left-0 top-0 border-l-2 border-t-2',
+  'right-0 top-0 border-r-2 border-t-2',
+  'left-0 bottom-0 border-l-2 border-b-2',
+  'right-0 bottom-0 border-r-2 border-b-2',
+]
+
 const Intro = () => {
   return (
-    <section className="relative flex min-h-[86vh] items-center overflow-hidden border-b border-ink-200 bg-ink-50">
+    <section className="relative flex min-h-[88vh] items-center overflow-hidden border-b border-ink-200 bg-ink-50">
+      {/* The sheet this is printed on: a ruled graticule, with elevation
+          contours drifting off the right edge. Decorative only. */}
+      <div className="pointer-events-none absolute inset-0 bg-graticule" aria-hidden="true" />
+      <HeroBackdrop />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 py-20 sm:px-8 lg:px-12">
-        <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-[1.15fr_1fr]">
-          <div className="animate-fadeInUp space-y-8">
+        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
+          <div className="animate-fadeInUp space-y-7">
             {/* A filing tag rather than a pill — squared off, ruled on the
                 left, the way a register entry is labelled. */}
-            <p className="inline-flex items-center gap-2.5 border-l-2 border-brand-600 bg-white py-1.5 pl-3 pr-4 text-xs font-semibold uppercase tracking-[0.18em] text-brand-800">
+            <p className="inline-flex items-center gap-2.5 border-l-2 border-accent-500 bg-white py-1.5 pl-3 pr-4 text-xs font-semibold uppercase tracking-[0.18em] text-brand-800 shadow-sm">
               Officials · Metro · Community
             </p>
 
-            <h1 className="font-display text-5xl font-bold leading-[1.08] tracking-tight text-ink-900 md:text-6xl lg:text-[4.25rem]">
+            <h1 className="font-display text-5xl font-bold leading-[1.06] tracking-tight text-ink-900 md:text-6xl lg:text-[4.5rem]">
               Lucknow civic data,
               <br />
               <span className="marker">in one place.</span>
@@ -34,24 +49,17 @@ const Intro = () => {
             <p className="max-w-xl text-lg leading-relaxed text-ink-600">
               Who represents Lucknow, the metro network, and neighbourhood
               amenities — gathered from public sources and made searchable.
-              A free, open project by{' '}
-              <a
-                href="https://neubitat.com/"
-                className="font-medium text-brand-700 underline decoration-brand-300 underline-offset-4 transition-colors hover:text-brand-800 hover:decoration-brand-600"
-              >
-                Neubitat
-              </a>
-              .
+              A free, open project by Aditya.
             </p>
 
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/map"
-                className="inline-flex items-center justify-center rounded-md bg-brand-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-800"
+                className="group inline-flex items-center justify-center rounded-md bg-brand-700 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-800"
               >
                 Open the map
                 <svg
-                  className="ml-2 h-4 w-4"
+                  className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -67,22 +75,27 @@ const Intro = () => {
               </Link>
               <Link
                 href="#tools"
-                className="inline-flex items-center justify-center rounded-md border border-ink-300 bg-white px-6 py-3 text-sm font-semibold text-ink-700 transition-colors hover:border-ink-400 hover:bg-ink-100 hover:text-ink-900"
+                className="inline-flex items-center justify-center rounded-md border border-ink-300 bg-white px-6 py-3.5 text-sm font-semibold text-ink-700 transition-colors hover:border-brand-400 hover:bg-brand-50 hover:text-brand-800"
               >
                 Browse everything
               </Link>
             </div>
 
-            <dl className="flex flex-wrap gap-x-10 gap-y-5 border-t border-ink-200 pt-8">
+            {/* The figures, set as a ruled register strip: divided cells
+                between two rules, rather than four numbers floating. */}
+            {/* gap-px over an ink-200 ground is what draws the dividers: it
+                stays correct at both column counts, which per-cell borders do
+                not once the grid wraps. */}
+            <dl className="grid grid-cols-2 gap-px border-y border-ink-200 bg-ink-200 sm:grid-cols-4">
               {STATS.map(([value, label], i) => (
-                <div key={label}>
+                <div key={label} className="bg-ink-50 px-4 py-5 sm:px-5">
                   <dt className="sr-only">{label}</dt>
                   <dd>
                     <CountUp
                       value={value}
-                      className={`block animate-fadeInUp font-display text-3xl font-bold tabular-nums tracking-tight text-brand-800 opacity-0 ${STAGGER[i]}`}
+                      className={`block animate-fadeInUp font-display text-3xl font-bold tabular-nums tracking-tight text-brand-800 opacity-0 md:text-4xl ${STAGGER[i]}`}
                     />
-                    <span className="mt-1 block text-sm text-ink-500">
+                    <span className="mt-1.5 block text-xs uppercase tracking-[0.08em] text-ink-500">
                       {label}
                     </span>
                   </dd>
@@ -91,9 +104,24 @@ const Intro = () => {
             </dl>
           </div>
 
-          {/* Lucknow corporation boundaries map — draws on page load. */}
-          <div className="hidden justify-center lg:flex lg:justify-end">
-            <LucknowCorpMap />
+          {/* The corporation outline, presented as a sheet pinned to the page
+              rather than a loose graphic. */}
+          <div className="hidden lg:block">
+            <figure className="relative mx-auto w-fit">
+              {TICKS.map(tick => (
+                <span
+                  key={tick}
+                  aria-hidden="true"
+                  className={`absolute h-5 w-5 border-accent-500 ${tick}`}
+                />
+              ))}
+              <div className="border border-ink-200 bg-white p-6 shadow-sheet">
+                <LucknowCorpMap />
+                <figcaption className="mt-2 border-t border-ink-100 pt-3 text-center text-[11px] uppercase tracking-[0.16em] text-ink-500">
+                  Stylised outline · not a traced boundary
+                </figcaption>
+              </div>
+            </figure>
           </div>
         </div>
       </div>

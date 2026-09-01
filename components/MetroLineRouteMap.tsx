@@ -114,7 +114,7 @@ export default function MetroLineRouteMap({
             <Popup>
               <strong>{station.name}</strong>
               {station.interchange && (
-                <div className="text-xs text-gray-600 mt-1">Interchange: {station.interchange}</div>
+                <div className="text-xs text-ink-600 mt-1">Interchange: {station.interchange}</div>
               )}
             </Popup>
           </Marker>
@@ -144,7 +144,7 @@ export default function MetroLineRouteMap({
           }}
         >
           <strong>{selected.name}</strong>
-          {selected.interchange && <span className="text-gray-600"> · connects to {selected.interchange}</span>}
+          {selected.interchange && <span className="text-ink-600"> · connects to {selected.interchange}</span>}
         </div>
       )}
     </div>

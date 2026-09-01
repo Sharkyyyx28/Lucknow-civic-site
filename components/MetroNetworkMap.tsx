@@ -365,11 +365,11 @@ export default function MetroNetworkMap({
         {selected && selectedPos && (
           <Popup position={selectedPos}>
             <strong>{selected.station.name}</strong>
-            <div className="text-xs text-gray-600 mt-1">
+            <div className="text-xs text-ink-600 mt-1">
               {selected.lineName} · {selected.linePhase}
             </div>
             {selected.station.interchange && (
-              <div className="text-xs text-gray-600">Interchange: {selected.station.interchange}</div>
+              <div className="text-xs text-ink-600">Interchange: {selected.station.interchange}</div>
             )}
           </Popup>
         )}

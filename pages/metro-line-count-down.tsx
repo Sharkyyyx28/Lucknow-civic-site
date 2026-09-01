@@ -134,13 +134,13 @@ const CountdownTimer = ({ line }: { line: MetroLine }) => {
           </div>
         </div>
       )}
-      <p className="text-base md:text-lg mt-3 md:mt-4 text-gray-600">
+      <p className="text-base md:text-lg mt-3 md:mt-4 text-ink-600">
         {isPast ? `Opened ${line.targetDateLabel}` : `Until ${line.targetDateLabel}`}
         {line.provisional && (
-          <span className="block text-xs md:text-sm text-gray-400 mt-1">Unofficial estimate — not a confirmed LMRC date</span>
+          <span className="block text-xs md:text-sm text-ink-400 mt-1">Unofficial estimate — not a confirmed LMRC date</span>
         )}
       </p>
-      <p className="text-sm md:text-base mt-3 md:mt-4 max-w-2xl mx-auto text-gray-600">{line.note}</p>
+      <p className="text-sm md:text-base mt-3 md:mt-4 max-w-2xl mx-auto text-ink-600">{line.note}</p>
     </div>
   );
 };
@@ -169,7 +169,7 @@ const MetroLineCountdown = () => {
                   className={`px-4 py-2 rounded-full text-sm md:text-base font-medium border transition-colors ${
                     activeLineId === line.id
                       ? theme.chipActive
-                      : `bg-white text-black border-gray-300 ${theme.chipHover}`
+                      : `bg-white text-black border-ink-300 ${theme.chipHover}`
                   }`}
                 >
                   {line.name}
@@ -186,7 +186,7 @@ const MetroLineCountdown = () => {
           {/* Route Map */}
           <div className="max-w-4xl mx-auto px-3 md:px-0 mb-8 md:mb-16">
             <h3 className="text-lg md:text-xl font-semibold mb-2 text-center">{activeLine.name} Route</h3>
-            <p className="text-sm md:text-base text-center text-gray-500 max-w-2xl mx-auto mb-4">
+            <p className="text-sm md:text-base text-center text-ink-500 max-w-2xl mx-auto mb-4">
               Click a station marker to see its name and any interchange. Positions are hand-placed
               along the known corridor, not a surveyed alignment — see the map page for the full caveat.
             </p>
@@ -196,14 +196,14 @@ const MetroLineCountdown = () => {
               color={LINE_THEME[activeLine.id].hex}
             />
             <details className="mt-4 max-w-2xl mx-auto">
-              <summary className={`cursor-pointer text-sm md:text-base text-center text-gray-600 ${LINE_THEME[activeLine.id].chipHover}`}>
+              <summary className={`cursor-pointer text-sm md:text-base text-center text-ink-600 ${LINE_THEME[activeLine.id].chipHover}`}>
                 View all {ROUTE_STATIONS[activeLine.id].length} stations
               </summary>
-              <ol className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1 text-sm text-gray-600 list-decimal list-inside">
+              <ol className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1 text-sm text-ink-600 list-decimal list-inside">
                 {ROUTE_STATIONS[activeLine.id].map((station) => (
                   <li key={station.name}>
                     {station.name}
-                    {station.interchange && <span className="text-gray-400"> ({station.interchange})</span>}
+                    {station.interchange && <span className="text-ink-400"> ({station.interchange})</span>}
                   </li>
                 ))}
               </ol>
