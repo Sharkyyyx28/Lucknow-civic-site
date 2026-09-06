@@ -63,7 +63,7 @@ describe('GET /api/ward-amenities', () => {
     })
     await handler(req, res)
     expect(res._getStatusCode()).toBe(200)
-    expect(res._getJSONData().ok).toBe(false)
+    expect((res._getJSONData() as any).ok).toBe(false)
     expect(res.getHeader('Cache-Control')).toBe('no-store')
   })
 })

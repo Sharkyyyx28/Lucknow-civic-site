@@ -56,7 +56,7 @@ describe('GET /api/social-handles', () => {
     await handler(req, res)
     expect(mockedList).toHaveBeenCalledWith(undefined)
     expect(res._getStatusCode()).toBe(200)
-    expect(res._getJSONData().handles).toHaveLength(1)
+    expect((res._getJSONData() as any).handles).toHaveLength(1)
   })
 
   it('passes through a valid category filter', async () => {
@@ -112,7 +112,7 @@ describe('POST /api/social-handles', () => {
     })
     await handler(req, res)
     expect(res._getStatusCode()).toBe(400)
-    expect(res._getJSONData().error).toMatch(/at least one/i)
+    expect((res._getJSONData() as any).error).toMatch(/at least one/i)
   })
 
   it('creates a handle, runs a best-effort check, and returns the checked handle', async () => {
@@ -132,7 +132,7 @@ describe('POST /api/social-handles', () => {
     expect(mockedCheckHandle).toHaveBeenCalledWith(created)
     expect(mockedRecordCheck).toHaveBeenCalledWith(created.id, { x: 'ok' })
     expect(res._getStatusCode()).toBe(201)
-    expect(res._getJSONData().handle.xStatus).toBe('ok')
+    expect((res._getJSONData() as any).handle.xStatus).toBe('ok')
   })
 
   it('still returns 201 with the unchecked handle when the existence check throws', async () => {
@@ -148,7 +148,7 @@ describe('POST /api/social-handles', () => {
     await handler(req, res)
 
     expect(res._getStatusCode()).toBe(201)
-    expect(res._getJSONData().handle).toEqual(created)
+    expect((res._getJSONData() as any).handle).toEqual(created)
     expect(mockedRecordCheck).not.toHaveBeenCalled()
   })
 })

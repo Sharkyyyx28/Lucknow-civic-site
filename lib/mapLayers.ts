@@ -106,7 +106,7 @@ export const LAYER_CONFIGS: LayerConfig[] = [
     id: 'gba',
     label: 'Lucknow Municipal Corporation boundary',
     shortLabel: 'City boundary',
-    url: '/geojson/gba-boundary.geojson',
+    url: '/geojson/lucknow-city-boundary.geojson',
     style: { color: '#C41E3A', weight: 3, fill: false, opacity: 0.9 },
     defaultEnabled: true,
   },
