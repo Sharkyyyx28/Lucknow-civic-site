@@ -127,14 +127,10 @@ CREATE TABLE IF NOT EXISTS officials_refresh_log (
   refreshed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Road register cache: a straight row-for-row copy of
--- data/lmc-ward-road-details.csv, refreshed via `npm run import:road-register`
--- (a one-time/rerunnable import, not a scheduled job — the source is a
--- committed static file, not a live API) so request-time code reads from
--- MySQL instead of re-parsing the 8MB CSV. No merging happens at import
--- time, so columns keep their raw source format (JSON-array-encoded phone
--- cells, newline-separated multi-person cells) exactly as
--- lib/officials.ts's splitNames()/parsePhones() expect.
+-- Legacy BBMP road register schema (deprecated in Lucknow):
+-- Kept only for migration backward compatibility. Lucknow municipal services
+-- do not use this table (Lucknow uses Jal Sansthan for water and MVVNL/LESA
+-- for power, rather than BWSSB/BESCOM).
 CREATE TABLE IF NOT EXISTS road_register (
   id VARCHAR(20) PRIMARY KEY,
   road_id VARCHAR(50) NOT NULL DEFAULT '',
@@ -188,11 +184,9 @@ CREATE TABLE IF NOT EXISTS road_register (
   INDEX idx_devision (devision)
 );
 
--- Pincode/ward mapping cache: a straight copy of
--- data/banglore-pincode-to-ward-mapping.csv, refreshed via
--- `npm run import:pincode-ward-mapping` (one-time/rerunnable, same reasoning
--- as road_register above). A pincode maps to more than one ward, so there's
--- no natural single-column key.
+-- Legacy pincode/ward mapping cache (deprecated in Lucknow):
+-- Kept for schema migration compatibility. Point lookups in Lucknow are resolved
+-- via turf point-in-polygon against actual 110-ward geometry (lib/wardLookup.ts).
 CREATE TABLE IF NOT EXISTS pincode_ward_mapping (
   id INT AUTO_INCREMENT PRIMARY KEY,
   pincode VARCHAR(10) NOT NULL DEFAULT '',
