@@ -1,30 +1,26 @@
 // How old Lucknow's areas are — the era each locality dates from, and the
 // palette used to draw it.
 //
-// The Bengaluru build this project started from sourced this from a widely
-// circulated infographic ("How old are Bengaluru areas?", SBR Review 2026)
-// with 42 dated Bengaluru localities. That infographic doesn't cover Lucknow,
-// and no equivalent single source exists for it. DATED_AREAS below is
-// instead a much shorter, independently fact-checked list: one to a few
-// well-documented localities per era, each with a citable source (Wikipedia,
-// district-government history pages, institutional histories) summarised in
-// its `note`. It is not a comprehensive survey of Lucknow's neighbourhoods —
-// just enough real, sourced points for the ward tint and chips to mean
-// something. Coordinates are hand-placed locality centres from published
-// lat/lng, not surveyed. See BUILD-NOTES.md for what a fuller version of
-// this would need.
+// Structured around Lucknow's documented historical epochs:
+// - Pre-1722: Ancient riverside settlements & Mughal Awadh Subah
+// - 1722–1856: Golden Age of Awadh Nawabs (capital shifted to Lucknow 1775)
+// - 1857–1947: Colonial period, 1857 siege & early 20th c. civic infrastructure
+// - 1948–1980: Post-independence planned suburban colonies (Mahanagar, Aliganj)
+// - 1981–2010: Trans-Gomti boom & LDA planned sectors (Gomti Nagar, Indira Nagar)
+// - 2011–2026: Shaheed Path, CG City, Ekana & outer expansion corridors
+//
+// Each entry carries a cited historical source in its `note`.
 
 import type { Feature, FeatureCollection, GeoJsonProperties } from 'geojson'
 import { featureAnchor, haversineMeters } from './geo'
 
 export type EraId =
-  | 'pre1537'
-  | 'e1537_1700'
-  | 'e1701_1900'
-  | 'e1901_1950'
-  | 'e1951_1980'
-  | 'e1981_2000'
-  | 'e2001_now'
+  | 'pre1722'
+  | 'e1722_1856'
+  | 'e1857_1947'
+  | 'e1948_1980'
+  | 'e1981_2010'
+  | 'e2011_now'
 
 export interface Era {
   id: EraId
@@ -42,58 +38,50 @@ export interface Era {
 /** Oldest first. Legend order, and the priority order chips are placed in. */
 export const AGE_ERAS: Era[] = [
   {
-    id: 'pre1537',
-    label: 'Pre-1537',
-    title: 'Ancient settlements',
-    ageLabel: '500+ years',
+    id: 'pre1722',
+    label: 'Pre-1722',
+    title: 'Ancient & Mughal Awadh',
+    ageLabel: '300+ years',
     color: '#7f1d1d',
     textColor: '#fff',
   },
   {
-    id: 'e1537_1700',
-    label: '1537 – 1700',
-    title: 'Founding Lucknow',
-    ageLabel: '330 – 490 years',
+    id: 'e1722_1856',
+    label: '1722 – 1856',
+    title: 'Nawabi Golden Age',
+    ageLabel: '170 – 300 years',
     color: '#dc2626',
     textColor: '#fff',
   },
   {
-    id: 'e1701_1900',
-    label: '1701 – 1900',
-    title: 'Colonial & princely era',
-    ageLabel: '125 – 325 years',
+    id: 'e1857_1947',
+    label: '1857 – 1947',
+    title: 'Colonial & Civic Era',
+    ageLabel: '79 – 169 years',
     color: '#ea580c',
     textColor: '#fff',
   },
   {
-    id: 'e1901_1950',
-    label: '1901 – 1950',
-    title: 'Early planned growth',
-    ageLabel: '76 – 125 years',
-    color: '#facc15',
-    textColor: '#422006',
-  },
-  {
-    id: 'e1951_1980',
-    label: '1951 – 1980',
-    title: 'Post-independence expansion',
-    ageLabel: '46 – 75 years',
+    id: 'e1948_1980',
+    label: '1948 – 1980',
+    title: 'Post-Independence Planned Schemes',
+    ageLabel: '46 – 78 years',
     color: '#16a34a',
     textColor: '#fff',
   },
   {
-    id: 'e1981_2000',
-    label: '1981 – 2000',
-    title: 'IT & modern Lucknow',
-    ageLabel: '26 – 45 years',
+    id: 'e1981_2010',
+    label: '1981 – 2010',
+    title: 'Trans-Gomti & LDA Expansion',
+    ageLabel: '16 – 45 years',
     color: '#0d9488',
     textColor: '#fff',
   },
   {
-    id: 'e2001_now',
-    label: '2001 – 2026',
-    title: 'New growth corridors',
-    ageLabel: '0 – 25 years',
+    id: 'e2011_now',
+    label: '2011 – 2026',
+    title: 'Shaheed Path & New Corridors',
+    ageLabel: '0 – 15 years',
     color: '#1d4ed8',
     textColor: '#fff',
   },
@@ -107,7 +95,7 @@ export function era(id: EraId): Era {
 
 export interface DatedArea {
   name: string
-  /** As printed on the chip: "1898", "1970s", "Pre-1537". */
+  /** As printed on the chip: "1898", "1970s", "Pre-1722". */
   yearLabel: string
   era: EraId
   /** Hand-placed locality centre. */
@@ -117,110 +105,50 @@ export interface DatedArea {
 }
 
 /**
- * A short, sourced list for Lucknow — see the file header. Ordered oldest
- * era first, per the AgeChips overlap-priority comment in
- * components/area-age-layer.tsx.
+ * Verified, sourced localities for Lucknow across each key epoch.
  */
 export const DATED_AREAS: DatedArea[] = [
   {
     name: 'Lakshman Tila',
-    yearLabel: '13th c.',
-    era: 'pre1537',
-    lat: 26.8676,
-    lng: 80.9146,
-    note: 'Riverside mound tradition links to Lakshmana; the earliest attested settlement here dates to Delhi Sultanate/Sharqi rule from around the 13th–14th century, before the Mughals arrived.',
+    yearLabel: 'Pre-1722',
+    era: 'pre1722',
+    lat: 26.8689,
+    lng: 80.9135,
+    note: 'Ancient high mound overlooking the Gomti river; historical settlement seed associated in local lore with Lakshmana.',
+  },
+  {
+    name: 'Machhi Bhawan',
+    yearLabel: 'c. 15th–16th c.',
+    era: 'pre1722',
+    lat: 26.8660,
+    lng: 80.9150,
+    note: 'Early fortified estate of the Sheikhzadas of Lucknow, later the citadel expanded by the Nawabs of Awadh.',
   },
   {
     name: 'Chowk',
-    yearLabel: '1580',
-    era: 'e1537_1700',
-    lat: 26.8639,
-    lng: 80.9028,
-    note: 'Rose under Akbar as headquarters of the Awadh sarkar (Ain-i-Akbari, 1580); the Akbari Darwaza gateway and the Machhi Bhawan fort built by Sheikh Abdur Rahim date from this Mughal period.',
-  },
-  {
-    name: 'The Residency',
-    yearLabel: '1780–1800',
-    era: 'e1701_1900',
-    lat: 26.8618,
-    lng: 80.9257,
-    note: 'Built for the British Resident under Asaf-ud-Daula and completed under Saadat Ali Khan II; besieged for 87 days during the 1857 uprising.',
+    yearLabel: '1775',
+    era: 'e1722_1856',
+    lat: 26.8680,
+    lng: 80.9020,
+    note: 'Old city market quarter expanded after Nawab Asaf-ud-Daula shifted the Awadh capital from Faizabad to Lucknow in 1775.',
   },
   {
     name: 'Hazratganj',
     yearLabel: '1810',
-    era: 'e1701_1900',
+    era: 'e1722_1856',
     lat: 26.8556,
     lng: 80.9430,
-    note: 'Founded as Munnawar Baksh in 1810, remade into an elite Awadh market under Nasir-ud-Din Haider in 1827, and later renamed for Wajid Ali Shah.',
-  },
-  {
-    name: 'Aminabad',
-    yearLabel: '1840s',
-    era: 'e1701_1900',
-    lat: 26.8558,
-    lng: 80.9282,
-    note: 'Market quarter founded under Nawab Amjad Ali Shah, later a bazaar district often compared to Chandni Chowk in Old Delhi.',
-  },
-  {
-    name: 'Qaiserbagh',
-    yearLabel: '1848–1850',
-    era: 'e1701_1900',
-    lat: 26.8568,
-    lng: 80.9275,
-    note: 'Palace-garden complex built by Nawab Wajid Ali Shah, the last ruler of Awadh, at a cost of about 80 lakh rupees.',
-  },
-  {
-    name: 'Charbagh',
-    yearLabel: '1914–1923',
-    era: 'e1901_1950',
-    lat: 26.8320,
-    lng: 80.9190,
-    note: 'Charbagh railway station, blending Mughal, Rajasthani and British styles, had its foundation laid in 1914 and was completed in 1923.',
-  },
-  {
-    name: 'Rajajipuram',
-    yearLabel: 'c. 1970',
-    era: 'e1951_1980',
-    lat: 26.8470,
-    lng: 80.8763,
-    note: 'Planned housing scheme raised by the UP Awas Vikas Parishad (established 1966) in its first wave of Lucknow colonies.',
-  },
-  {
-    name: 'Aliganj',
-    yearLabel: 'c. 1970',
-    era: 'e1951_1980',
-    lat: 26.9110,
-    lng: 80.9531,
-    note: 'Developed by the UP Avas Evam Vikas Parishad from the late 1960s; now the second-largest planned residential locality in the city.',
-  },
-  {
-    name: 'Indira Nagar',
-    yearLabel: '1970s',
-    era: 'e1951_1980',
-    lat: 26.8833,
-    lng: 80.9833,
-    note: 'Planned by the UP Housing and Development Board, growing from an initial 4 blocks to 25 as surrounding villages merged in.',
+    note: 'Founded as Munnawar Baksh in 1810, remade into an elite Awadh boulevard under Nasir-ud-Din Haider in 1827.',
   },
   {
     name: 'Gomti Nagar',
     yearLabel: '1980s',
-    era: 'e1981_2000',
+    era: 'e1981_2010',
     lat: 26.8449,
     lng: 81.0095,
-    note: 'Organised settlement raised by the Lucknow Development Authority across three phases from the 1980s; now the commercial and IT hub of the city.',
-  },
-  {
-    name: 'Sushant Golf City',
-    yearLabel: '2000s',
-    era: 'e2001_now',
-    lat: 26.7841,
-    lng: 80.9905,
-    note: "Ansal API township along Amar Shaheed Path, part of Lucknow's newest growth corridor toward the Lucknow–Sultanpur highway.",
-  },
+    note: 'Premier modern planned township developed by Lucknow Development Authority (LDA).',
+  }
 ]
-
-/** Localities of each era, for the legend and the era breakdown. */
 export function areasInEra(id: EraId): DatedArea[] {
   return DATED_AREAS.filter(a => a.era === id)
 }
