@@ -136,7 +136,7 @@ export type OverlayId = LayerId | typeof AREA_AGE_LAYER_ID
 
 export const AREA_AGE_LAYER = {
   id: AREA_AGE_LAYER_ID,
-  label: 'Area Age (1537 – 2026)',
+  label: 'Area Age (Ancient – Present)',
   shortLabel: 'Area age',
 } as const
 
