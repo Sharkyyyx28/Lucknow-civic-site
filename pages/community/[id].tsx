@@ -44,6 +44,22 @@ export default function CommunityPostPage({ post: initialPost }: Props) {
 
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  const getTweetIntentUrl = () => {
+    const url = typeof window !== 'undefined' ? window.location.href : ''
+    const ward = wardDisplayName(post.wardName)
+    const place = post.placeLabel ? ` (${post.placeLabel})` : ''
+    const text = `Civic issue in Lucknow - ${ward}${place}:\n"${post.title}"\ncc: @LMC_Lucknow @AdminLKO @lkopolice\n${url}`
+    return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`
+  }
+
+  const copyGrievanceDetails = () => {
+    const text = `LUCKNOW CIVIC GRIEVANCE SUMMARY\nWard: ${wardDisplayName(post.wardName)}${post.placeLabel ? `\nLandmark: ${post.placeLabel}` : ''}\nCoordinates: ${post.lat.toFixed(5)}, ${post.lng.toFixed(5)}\nIssue: ${post.title}\nDetails: ${post.body}\nLink: ${typeof window !== 'undefined' ? window.location.href : ''}`
+    navigator.clipboard.writeText(text)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2500)
+  }
 
   const startEdit = () => {
     setTitle(post.title)
