@@ -213,6 +213,31 @@ export default function CommunityPostPage({ post: initialPost }: Props) {
 
               <PostBody text={post.body} className="text-lg leading-relaxed text-ink-800" />
 
+              <div className="my-8 rounded-lg border border-brand-200 bg-brand-50/60 p-5">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                  <h3 className="font-display text-sm font-bold uppercase tracking-wider text-brand-900">
+                    Escalate to Lucknow Civic Authorities
+                  </h3>
+                  <span className="text-xs text-brand-800 bg-brand-100/80 px-2 py-0.5 rounded font-mono font-medium">
+                    LMC 1533 · Police 112 · CM 1076
+                  </span>
+                </div>
+                <p className="text-sm text-brand-900/80 mb-4 leading-relaxed">
+                  Bring this report to the attention of Lucknow Municipal Corporation (Nagar Nigam) and district administration via Twitter/X.
+                </p>
+                <div className="flex flex-wrap items-center gap-3">
+                  <a
+                    href={getTweetIntentUrl()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded bg-black px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-ink-800 transition-colors"
+                  >
+                    <svg className="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    Tweet to @LMC_Lucknow & @AdminLKO
+                  </a>
+                </div>
+              </div>
+
               <div className="mt-10">
                 <h2 className="text-xs font-semibold uppercase tracking-wide text-ink-400 mb-2">
                   The place this is about
