@@ -223,7 +223,7 @@ export default function CommunityPostPage({ post: initialPost }: Props) {
                   </span>
                 </div>
                 <p className="text-sm text-brand-900/80 mb-4 leading-relaxed">
-                  Bring this report to the attention of Lucknow Municipal Corporation (Nagar Nigam) and district administration via Twitter/X.
+                  Bring this report to the attention of Lucknow Municipal Corporation (Nagar Nigam) and district administration via Twitter/X or UP Jansunwai.
                 </p>
                 <div className="flex flex-wrap items-center gap-3">
                   <a
@@ -235,6 +235,13 @@ export default function CommunityPostPage({ post: initialPost }: Props) {
                     <svg className="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                     Tweet to @LMC_Lucknow & @AdminLKO
                   </a>
+                  <button
+                    type="button"
+                    onClick={copyGrievanceDetails}
+                    className="inline-flex items-center gap-2 rounded border border-ink-300 bg-white px-4 py-2 text-xs font-semibold text-ink-800 hover:border-ink-500 hover:bg-ink-50 transition-colors"
+                  >
+                    📋 {copied ? 'Copied Summary!' : 'Copy for Jansunwai / WhatsApp'}
+                  </button>
                 </div>
               </div>
 
