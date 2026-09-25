@@ -234,9 +234,11 @@ CREATE TABLE IF NOT EXISTS community_posts (
   title VARCHAR(200) NOT NULL,
   body TEXT NOT NULL,
   category ENUM('issue', 'praise', 'update', 'question') NOT NULL DEFAULT 'issue',
+  status ENUM('reported', 'in_progress', 'resolved') NOT NULL DEFAULT 'reported',
   ward_name VARCHAR(255) NOT NULL,
   corporation VARCHAR(100) NOT NULL DEFAULT '',
   place_label VARCHAR(120) NOT NULL DEFAULT '',
+  upvotes INT NOT NULL DEFAULT 0,
   lat DOUBLE NOT NULL,
   lng DOUBLE NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -244,6 +246,7 @@ CREATE TABLE IF NOT EXISTS community_posts (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   INDEX idx_ward_name (ward_name),
   INDEX idx_corporation (corporation),
+  INDEX idx_status (status),
   INDEX idx_created_at (created_at),
   INDEX idx_user_id (user_id)
 );
