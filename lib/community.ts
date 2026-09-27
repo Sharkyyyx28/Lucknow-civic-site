@@ -8,7 +8,14 @@ import { RowDataPacket } from 'mysql2/promise'
 import crypto from 'crypto'
 import pool from './db'
 import { ensureUserId } from './profiles'
-import { BODY_MAX, PLACE_LABEL_MAX, TITLE_MAX, type CommunityPost, type PostCategory } from './communityTypes'
+import {
+  BODY_MAX,
+  PLACE_LABEL_MAX,
+  TITLE_MAX,
+  type CommunityPost,
+  type PostCategory,
+  type PostStatus,
+} from './communityTypes'
 
 const DEFAULT_LIMIT = 30
 const MAX_LIMIT = 100
@@ -21,6 +28,7 @@ export interface PostFilter {
   wardNames?: string[]
   corporations?: string[]
   category?: PostCategory
+  status?: PostStatus
   /** Sign-in email — restricts the feed to that person's own posts. */
   authorKey?: string
   limit?: number
@@ -31,6 +39,7 @@ export interface PostInput {
   title: string
   body: string
   category: PostCategory
+  status?: PostStatus
   wardName: string
   corporation: string
   placeLabel?: string
@@ -43,9 +52,11 @@ interface PostRow extends RowDataPacket {
   title: string
   body: string
   category: PostCategory
+  status?: PostStatus
   ward_name: string
   corporation: string
   place_label: string
+  upvotes?: number
   lat: number
   lng: number
   author_name: string
@@ -55,7 +66,10 @@ interface PostRow extends RowDataPacket {
 }
 
 const SELECT_POST = `
-  SELECT p.id, p.title, p.body, p.category, p.ward_name, p.corporation, p.place_label,
+  SELECT p.id, p.title, p.body, p.category,
+         COALESCE(p.status, 'reported') AS status,
+         p.ward_name, p.corporation, p.place_label,
+         COALESCE(p.upvotes, 0) AS upvotes,
          p.lat, p.lng, p.created_at, p.updated_at,
          u.name AS author_name, u.email AS author_email
   FROM community_posts p
@@ -68,9 +82,11 @@ function toPost(row: PostRow, viewerKey?: string): CommunityPost {
     title: row.title,
     body: row.body,
     category: row.category,
+    status: row.status ?? 'reported',
     wardName: row.ward_name,
     corporation: row.corporation,
     placeLabel: row.place_label,
+    upvotes: Number(row.upvotes ?? 0),
     lat: row.lat,
     lng: row.lng,
     authorName: row.author_name?.trim() || ANONYMOUS_AUTHOR,
@@ -98,6 +114,10 @@ function buildWhere(filter: PostFilter): { sql: string; values: unknown[] } {
   if (filter.category) {
     clauses.push('p.category = ?')
     values.push(filter.category)
+  }
+  if (filter.status) {
+    clauses.push('p.status = ?')
+    values.push(filter.status)
   }
   if (filter.authorKey) {
     clauses.push('u.email = ?')
@@ -140,14 +160,15 @@ export async function createPost(userKey: string, input: PostInput): Promise<Com
   const id = crypto.randomUUID()
   await pool.query(
     `INSERT INTO community_posts
-       (id, user_id, title, body, category, ward_name, corporation, place_label, lat, lng)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       (id, user_id, title, body, category, status, ward_name, corporation, place_label, upvotes, lat, lng)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)`,
     [
       id,
       userId,
       input.title.trim().slice(0, TITLE_MAX),
       input.body.trim().slice(0, BODY_MAX),
       input.category,
+      input.status ?? 'reported',
       input.wardName,
       input.corporation,
       (input.placeLabel ?? '').trim().slice(0, PLACE_LABEL_MAX),
@@ -159,15 +180,18 @@ export async function createPost(userKey: string, input: PostInput): Promise<Com
 }
 
 /**
- * Edits the text of a post. Only the author can change their own post, and the
- * pinned location is fixed once published — a post that moves would silently
- * change which ward's feed it belongs to. Returns null when the post does not
- * exist or belongs to someone else.
+ * Edits the text or status of a post. Only the author can change their own post.
  */
 export async function updatePost(
   userKey: string,
   id: string,
-  changes: { title?: string; body?: string; category?: PostCategory; placeLabel?: string }
+  changes: {
+    title?: string
+    body?: string
+    category?: PostCategory
+    status?: PostStatus
+    placeLabel?: string
+  }
 ): Promise<CommunityPost | null> {
   const existing = await getPost(id, userKey)
   if (!existing || !existing.isAuthor) return null
@@ -175,13 +199,25 @@ export async function updatePost(
   const title = (changes.title ?? existing.title).trim().slice(0, TITLE_MAX)
   const body = (changes.body ?? existing.body).trim().slice(0, BODY_MAX)
   const category = changes.category ?? existing.category
+  const status = changes.status ?? existing.status
   const placeLabel = (changes.placeLabel ?? existing.placeLabel).trim().slice(0, PLACE_LABEL_MAX)
 
   await pool.query(
-    'UPDATE community_posts SET title = ?, body = ?, category = ?, place_label = ? WHERE id = ?',
-    [title, body, category, placeLabel, id]
+    'UPDATE community_posts SET title = ?, body = ?, category = ?, status = ?, place_label = ? WHERE id = ?',
+    [title, body, category, status, placeLabel, id]
   )
   return getPost(id, userKey)
+}
+
+/** Increments community endorsement upvotes for an issue. */
+export async function upvotePost(id: string): Promise<number | null> {
+  const [result] = await pool.query<any>(
+    'UPDATE community_posts SET upvotes = upvotes + 1 WHERE id = ?',
+    [id]
+  )
+  if (result.affectedRows === 0) return null
+  const post = await getPost(id)
+  return post ? post.upvotes : null
 }
 
 /** Deletes the viewer's own post. False when it does not exist or is someone else's. */

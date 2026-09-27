@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '../auth/[...nextauth]'
 import { wardAtPoint } from '../../../lib/wardLookup'
 import { createPost, listPosts, type PostFilter } from '../../../lib/community'
-import { BODY_MAX, TITLE_MAX, isPostCategory } from '../../../lib/communityTypes'
+import { BODY_MAX, TITLE_MAX, isPostCategory, isPostStatus } from '../../../lib/communityTypes'
 
 /** `?ward=A&ward=B` and `?ward=A,B` both work; blank entries are dropped. */
 function listParam(value: string | string[] | undefined): string[] | undefined {
@@ -31,10 +31,13 @@ async function handleRequest(req: NextApiRequest, res: NextApiResponse) {
   // Reading is open — these are civic notes about public places, and the feed
   // is what a signed-out visitor lands on. Only posting needs an account.
   if (req.method === 'GET') {
-    const { ward, corporation, category, mine, limit, offset } = req.query
+    const { ward, corporation, category, status, mine, limit, offset } = req.query
 
     if (category !== undefined && !isPostCategory(category)) {
       return res.status(400).json({ error: 'Unknown category' })
+    }
+    if (status !== undefined && !isPostStatus(status)) {
+      return res.status(400).json({ error: 'Unknown status' })
     }
     if (mine === '1' && !viewerKey) {
       return res.status(401).json({ error: 'Sign in required' })
@@ -44,6 +47,7 @@ async function handleRequest(req: NextApiRequest, res: NextApiResponse) {
       wardNames: listParam(ward),
       corporations: listParam(corporation),
       ...(isPostCategory(category) ? { category } : {}),
+      ...(isPostStatus(status) ? { status } : {}),
       ...(mine === '1' && viewerKey ? { authorKey: viewerKey } : {}),
       ...(typeof limit === 'string' && Number.isFinite(parseInt(limit))
         ? { limit: parseInt(limit) }

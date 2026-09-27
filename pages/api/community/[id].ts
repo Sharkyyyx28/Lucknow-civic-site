@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '../auth/[...nextauth]'
 import { deletePost, getPost, updatePost } from '../../../lib/community'
-import { BODY_MAX, TITLE_MAX, isPostCategory } from '../../../lib/communityTypes'
+import { BODY_MAX, TITLE_MAX, isPostCategory, isPostStatus } from '../../../lib/communityTypes'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -63,6 +63,12 @@ async function handleRequest(req: NextApiRequest, res: NextApiResponse) {
         return res.status(400).json({ error: 'placeLabel must be a string' })
       }
       changes.placeLabel = placeLabel
+    }
+    if (req.body?.status !== undefined) {
+      if (!isPostStatus(req.body.status)) {
+        return res.status(400).json({ error: 'Unknown status' })
+      }
+      changes.status = req.body.status
     }
 
     const post = await updatePost(viewerKey, id, changes)
