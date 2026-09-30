@@ -7,19 +7,22 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Layout from '../../components/layout'
 import Container from '../../components/container'
-import { CategoryChip, PostBody, formatPostDate } from '../../components/community-post-card'
+import { CategoryChip, StatusChip, PostBody, formatPostDate } from '../../components/community-post-card'
 import { authOptions } from '../api/auth/[...nextauth]'
 import { getPost } from '../../lib/community'
 import {
   BODY_MAX,
   CATEGORY_LABELS,
   CATEGORY_STYLES,
+  POST_STATUSES,
+  STATUS_LABELS,
   PLACE_LABEL_MAX,
   POST_CATEGORIES,
   TITLE_MAX,
   wardDisplayName,
   type CommunityPost,
   type PostCategory,
+  type PostStatus,
 } from '../../lib/communityTypes'
 import { INPUT, PRIMARY_BTN, QUIET_BTN, SMALL_BTN } from '../../lib/ui'
 import { fetchJson } from '../../lib/fetchJson'
@@ -38,6 +41,7 @@ export default function CommunityPostPage({ post: initialPost }: Props) {
   const [title, setTitle] = useState(post.title)
   const [body, setBody] = useState(post.body)
   const [category, setCategory] = useState<PostCategory>(post.category)
+  const [status, setStatus] = useState<PostStatus>(post.status || 'reported')
   const [placeLabel, setPlaceLabel] = useState(post.placeLabel)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -45,6 +49,8 @@ export default function CommunityPostPage({ post: initialPost }: Props) {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [upvoted, setUpvoted] = useState(false)
+  const [upvoting, setUpvoting] = useState(false)
 
   const getTweetIntentUrl = () => {
     const url = typeof window !== 'undefined' ? window.location.href : ''
@@ -61,10 +67,41 @@ export default function CommunityPostPage({ post: initialPost }: Props) {
     setTimeout(() => setCopied(false), 2500)
   }
 
+  const handleUpvote = async () => {
+    if (upvoted || upvoting) return
+    setUpvoting(true)
+    try {
+      const data = await fetchJson<{ ok: boolean; upvotes: number }>(`/api/community/${post.id}/upvote`, {
+        method: 'POST',
+      })
+      setPost(prev => ({ ...prev, upvotes: data.upvotes }))
+      setUpvoted(true)
+    } catch {
+      // ignore
+    } finally {
+      setUpvoting(false)
+    }
+  }
+
+  const handleStatusChange = async (newStatus: PostStatus) => {
+    try {
+      const data = await fetchJson<{ post: CommunityPost }>(`/api/community/${post.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      })
+      setPost(data.post)
+      setStatus(data.post.status)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not update status')
+    }
+  }
+
   const startEdit = () => {
     setTitle(post.title)
     setBody(post.body)
     setCategory(post.category)
+    setStatus(post.status || 'reported')
     setPlaceLabel(post.placeLabel)
     setError(null)
     setEditing(true)
@@ -78,7 +115,7 @@ export default function CommunityPostPage({ post: initialPost }: Props) {
       const data = await fetchJson<{ post: CommunityPost }>(`/api/community/${post.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, body, category, placeLabel }),
+        body: JSON.stringify({ title, body, category, status, placeLabel }),
       })
       setPost(data.post)
       setEditing(false)
@@ -120,23 +157,51 @@ export default function CommunityPostPage({ post: initialPost }: Props) {
             <form onSubmit={handleSave} className="mt-6 space-y-6">
               <h1 className="text-2xl font-bold tracking-tighter">Edit your post</h1>
 
-              <div className="flex flex-wrap gap-2">
-                {POST_CATEGORIES.map(c => (
-                  <button
-                    key={c}
-                    type="button"
-                    onClick={() => setCategory(c)}
-                    aria-pressed={category === c}
-                    className={`inline-flex items-center gap-1.5 border px-3 py-2 text-sm duration-200 transition-colors ${
-                      category === c
-                        ? 'border-black bg-black text-white font-bold'
-                        : 'border-ink-300 text-ink-700 hover:border-black'
-                    }`}
-                  >
-                    <span aria-hidden="true">{CATEGORY_STYLES[c].icon}</span>
-                    {CATEGORY_LABELS[c]}
-                  </button>
-                ))}
+              <div className="space-y-2">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-ink-500">
+                  Category
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {POST_CATEGORIES.map(c => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => setCategory(c)}
+                      aria-pressed={category === c}
+                      className={`inline-flex items-center gap-1.5 border px-3 py-2 text-sm duration-200 transition-colors ${
+                        category === c
+                          ? 'border-black bg-black text-white font-bold'
+                          : 'border-ink-300 text-ink-700 hover:border-black'
+                      }`}
+                    >
+                      <span aria-hidden="true">{CATEGORY_STYLES[c].icon}</span>
+                      {CATEGORY_LABELS[c]}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-ink-500">
+                  Resolution Status
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {POST_STATUSES.map(s => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => setStatus(s)}
+                      aria-pressed={status === s}
+                      className={`inline-flex items-center gap-1.5 border px-3 py-1.5 text-xs font-semibold rounded duration-200 transition-colors ${
+                        status === s
+                          ? 'border-brand-800 bg-brand-800 text-white'
+                          : 'border-ink-300 text-ink-700 hover:border-black bg-white'
+                      }`}
+                    >
+                      {STATUS_LABELS[s]}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <input
@@ -187,8 +252,27 @@ export default function CommunityPostPage({ post: initialPost }: Props) {
             </form>
           ) : (
             <>
-              <div className="flex flex-wrap items-center gap-2 mt-6 mb-4">
-                <CategoryChip category={post.category} />
+              <div className="flex flex-wrap items-center justify-between gap-3 mt-6 mb-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <CategoryChip category={post.category} />
+                  <StatusChip status={post.status || 'reported'} />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleUpvote}
+                  disabled={upvoted || upvoting}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded text-xs font-semibold border transition-all ${
+                    upvoted
+                      ? 'border-brand-600 bg-brand-50 text-brand-800'
+                      : 'border-ink-300 bg-white text-ink-700 hover:border-brand-600 hover:bg-brand-50/50'
+                  }`}
+                >
+                  <span>👍</span>
+                  <span>{upvoted ? 'Endorsed' : 'Endorse issue'}</span>
+                  <span className="ml-1 bg-ink-100 text-ink-800 px-1.5 py-0.2 rounded font-mono">
+                    {post.upvotes || 0}
+                  </span>
+                </button>
               </div>
 
               <h1 className="text-4xl md:text-5xl font-bold tracking-tighter leading-tight mb-4">
@@ -264,39 +348,58 @@ export default function CommunityPostPage({ post: initialPost }: Props) {
               </div>
 
               {post.isAuthor && (
-                <div className="flex flex-wrap items-center gap-4 mt-10 pt-6 border-t border-ink-200">
-                  <button type="button" onClick={startEdit} className={SMALL_BTN}>
-                    Edit post
-                  </button>
-                  {confirmDelete ? (
-                    <>
-                      <span className="text-sm text-ink-500">Delete this post?</span>
-                      <button
-                        type="button"
-                        onClick={handleDelete}
-                        disabled={deleting}
-                        className="text-sm font-bold text-red-600 hover:underline disabled:opacity-40"
-                      >
-                        {deleting ? 'Deleting…' : 'Yes, delete'}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setConfirmDelete(false)}
-                        className={QUIET_BTN}
-                      >
-                        Keep it
-                      </button>
-                    </>
-                  ) : (
+                <div className="flex flex-wrap items-center justify-between gap-4 mt-10 pt-6 border-t border-ink-200">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-ink-500 font-medium">Update status:</span>
                     <button
                       type="button"
-                      onClick={() => setConfirmDelete(true)}
-                      className="text-sm text-ink-500 hover:text-red-600 hover:underline"
+                      onClick={() => handleStatusChange('in_progress')}
+                      className="text-xs px-2.5 py-1 rounded border border-amber-300 bg-amber-50 text-amber-800 font-semibold hover:bg-amber-100"
                     >
-                      Delete
+                      In Progress
                     </button>
-                  )}
-                  {error && <p className="text-red-600 text-sm w-full">{error}</p>}
+                    <button
+                      type="button"
+                      onClick={() => handleStatusChange('resolved')}
+                      className="text-xs px-2.5 py-1 rounded border border-emerald-300 bg-emerald-50 text-emerald-800 font-semibold hover:bg-emerald-100"
+                    >
+                      ✓ Resolved
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <button type="button" onClick={startEdit} className={SMALL_BTN}>
+                      Edit post
+                    </button>
+                    {confirmDelete ? (
+                      <>
+                        <span className="text-sm text-ink-500">Delete this post?</span>
+                        <button
+                          type="button"
+                          onClick={handleDelete}
+                          disabled={deleting}
+                          className="text-sm font-bold text-red-600 hover:underline disabled:opacity-40"
+                        >
+                          {deleting ? 'Deleting…' : 'Yes, delete'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setConfirmDelete(false)}
+                          className={QUIET_BTN}
+                        >
+                          Keep it
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setConfirmDelete(true)}
+                        className="text-sm text-red-600 hover:underline"
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
             </>
@@ -307,14 +410,13 @@ export default function CommunityPostPage({ post: initialPost }: Props) {
   )
 }
 
-// Rendered on the server so a shared link shows the post itself, and so the
-// author's edit/delete controls are decided by the session rather than by
-// anything the browser claims.
-export const getServerSideProps: GetServerSideProps<Props> = async context => {
-  const { id } = context.params as { id: string }
-  const session = await getServerSession(context.req, context.res, authOptions)
-  const post = await getPost(id, session?.user?.email ?? undefined)
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req, res, params }) => {
+  const session = await getServerSession(req, res, authOptions)
+  const viewerKey = session?.user?.email ?? undefined
 
+  const id = typeof params?.id === 'string' ? params.id : ''
+  const post = id ? await getPost(id, viewerKey) : null
   if (!post) return { notFound: true }
+
   return { props: { post } }
 }

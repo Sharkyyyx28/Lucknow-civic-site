@@ -12,10 +12,14 @@ import type { SavedLocation } from '../../lib/profiles'
 import {
   CATEGORY_LABELS,
   POST_CATEGORIES,
+  POST_STATUSES,
+  STATUS_LABELS,
   isPostCategory,
+  isPostStatus,
   wardDisplayName,
   type CommunityPost,
   type PostCategory,
+  type PostStatus,
 } from '../../lib/communityTypes'
 import { INPUT, PRIMARY_BTN } from '../../lib/ui'
 import { fetchJson } from '../../lib/fetchJson'
@@ -35,6 +39,7 @@ export default function CommunityFeedPage() {
   // option, so the default is only applied once, on first load.
   const [scopeTouched, setScopeTouched] = useState(false)
   const [category, setCategory] = useState<PostCategory | ''>('')
+  const [statusFilter, setStatusFilter] = useState<PostStatus | ''>('')
 
   const [posts, setPosts] = useState<CommunityPost[]>([])
   const [total, setTotal] = useState(0)
@@ -102,8 +107,9 @@ export default function CommunityFeedPage() {
     else if (scope.startsWith('ward:')) params.append('ward', scope.slice(5))
     else if (scope.startsWith('corp:')) params.append('corporation', scope.slice(5))
     if (category) params.append('category', category)
+    if (statusFilter) params.append('status', statusFilter)
     return params.toString()
-  }, [scope, category, myWardNames, myCorporations])
+  }, [scope, category, statusFilter, myWardNames, myCorporations])
 
   // "My wards" with nothing saved yet would ask the server for an empty ward
   // list; skip the round trip and show the prompt to save a place instead.
@@ -195,6 +201,22 @@ export default function CommunityFeedPage() {
                 <option value="">Everything</option>
                 {POST_CATEGORIES.map(c => (
                   <option key={c} value={c}>{CATEGORY_LABELS[c]}</option>
+                ))}
+              </select>
+            </label>
+
+            <label className="sm:w-44">
+              <span className="block text-xs font-semibold uppercase tracking-wide text-ink-400 mb-1">
+                Status
+              </span>
+              <select
+                value={statusFilter}
+                onChange={e => setStatusFilter(isPostStatus(e.target.value) ? e.target.value : '')}
+                className={`${INPUT} bg-white`}
+              >
+                <option value="">All statuses</option>
+                {POST_STATUSES.map(s => (
+                  <option key={s} value={s}>{STATUS_LABELS[s]}</option>
                 ))}
               </select>
             </label>

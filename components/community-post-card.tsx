@@ -2,9 +2,12 @@ import Link from 'next/link'
 import {
   CATEGORY_LABELS,
   CATEGORY_STYLES,
+  STATUS_LABELS,
+  STATUS_STYLES,
   wardDisplayName,
   type CommunityPost,
   type PostCategory,
+  type PostStatus,
 } from '../lib/communityTypes'
 
 /** "12 Jun 2026" — short and unambiguous, which matters for civic complaints. */
@@ -26,10 +29,19 @@ export const CategoryChip = ({ category }: { category: PostCategory }) => {
   )
 }
 
+export const StatusChip = ({ status }: { status: PostStatus }) => {
+  const style = STATUS_STYLES[status] ?? STATUS_STYLES.reported
+  return (
+    <span className={`inline-flex items-center gap-1.5 border px-2 py-0.5 text-xs font-medium rounded ${style.chip}`}>
+      <span className={`h-1.5 w-1.5 rounded-full ${style.dot}`} aria-hidden="true" />
+      {STATUS_LABELS[status] ?? 'Reported'}
+    </span>
+  )
+}
+
 /**
  * Post text as the author typed it. Deliberately rendered as plain text with
- * blank lines kept as paragraph breaks — this is user-submitted content, so it
- * never goes near dangerouslySetInnerHTML the way the static markdown posts do.
+ * blank lines kept as paragraph breaks.
  */
 export const PostBody = ({ text, className = '' }: { text: string; className?: string }) => (
   <div className={className}>
@@ -52,11 +64,19 @@ function excerpt(body: string, max = 220): string {
 
 const CommunityPostCard = ({ post }: { post: CommunityPost }) => (
   <article className="border border-ink-200 p-5 hover:border-ink-400 duration-200 transition-colors">
-    <div className="flex flex-wrap items-center gap-2 mb-3">
-      <CategoryChip category={post.category} />
-      {post.isAuthor && (
-        <span className="border border-ink-300 bg-ink-50 px-2 py-1 text-xs text-ink-600">
-          Your post
+    <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+      <div className="flex flex-wrap items-center gap-2">
+        <CategoryChip category={post.category} />
+        <StatusChip status={post.status || 'reported'} />
+        {post.isAuthor && (
+          <span className="border border-ink-300 bg-ink-50 px-2 py-0.5 text-xs text-ink-600 rounded">
+            Your post
+          </span>
+        )}
+      </div>
+      {post.upvotes > 0 && (
+        <span className="inline-flex items-center gap-1 text-xs font-semibold text-brand-700 bg-brand-50 px-2 py-0.5 rounded border border-brand-200">
+          👍 {post.upvotes} {post.upvotes === 1 ? 'endorsement' : 'endorsements'}
         </span>
       )}
     </div>
@@ -80,7 +100,7 @@ const CommunityPostCard = ({ post }: { post: CommunityPost }) => (
         {post.authorName} · {formatPostDate(post.createdAt)}
       </span>
       <Link href={`/community/${post.id}`} className="font-bold text-black hover:underline">
-        Read post →
+        Read & escalate →
       </Link>
     </div>
   </article>
