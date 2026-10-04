@@ -525,6 +525,15 @@ const SEARCH_TYPE_ICON: Record<SearchHitType, string> = { ward: '📍', constitu
 const SEARCH_MIN_CHARS = 2
 const SEARCH_MAX_RESULTS = 8
 
+// Geocoding search result type
+interface GeocodeResultItem {
+  place_id: number
+  display_name: string
+  lat: string
+  lon: string
+  type?: string
+}
+
 function MapSearchBox({
   wardsFc,
   onSelectWard,
