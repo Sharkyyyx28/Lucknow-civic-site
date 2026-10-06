@@ -512,40 +512,63 @@ function layerStyleToAccent(style: L.PathOptions): string {
 
 // ── Map search ───────────────────────────────────────────────────────────────
 
-type SearchHitType = 'ward' | 'constituency'
+type SearchHitType = 'ward' | 'constituency' | 'place'
 
 interface SearchHit {
   type: SearchHitType
   key: string
   label: string
   sublabel: string
+  lat?: number
+  lng?: number
 }
 
-const SEARCH_TYPE_ICON: Record<SearchHitType, string> = { ward: '📍', constituency: '🗳' }
+const SEARCH_TYPE_ICON: Record<SearchHitType, string> = { ward: '📍', constituency: '🗳', place: '🏙️' }
 const SEARCH_MIN_CHARS = 2
 const SEARCH_MAX_RESULTS = 8
-
-// Geocoding search result type
-interface GeocodeResultItem {
-  place_id: number
-  display_name: string
-  lat: string
-  lon: string
-  type?: string
-}
 
 function MapSearchBox({
   wardsFc,
   onSelectWard,
+  onSelectPoint,
   onFocus,
 }: {
   wardsFc: FeatureCollection | null
   onSelectWard: (feature: Feature) => void
+  onSelectPoint?: (lat: number, lng: number, label: string) => void
   onFocus: () => void
 }) {
   const [q, setQ] = useState('')
   const [open, setOpen] = useState(false)
+  const [placeHits, setPlaceHits] = useState<SearchHit[]>([])
   const inputRef = useRef<HTMLInputElement | null>(null)
+
+  useEffect(() => {
+    const trimmed = q.trim()
+    if (trimmed.length < 3) {
+      setPlaceHits([])
+      return
+    }
+    const timer = setTimeout(() => {
+      fetch(`/api/geocode?q=${encodeURIComponent(trimmed)}`)
+        .then(r => r.json())
+        .then(data => {
+          if (Array.isArray(data.results)) {
+            const hits: SearchHit[] = data.results.map((r: any) => ({
+              type: 'place',
+              key: `place:${r.placeId}`,
+              label: r.name,
+              sublabel: r.label,
+              lat: r.lat,
+              lng: r.lng,
+            }))
+            setPlaceHits(hits)
+          }
+        })
+        .catch(() => {})
+    }, 280)
+    return () => clearTimeout(timer)
+  }, [q])
 
   // Ward and constituency hits both resolve back to a ward Feature — a
   // constituency has no boundary of its own here, so its "page" is the ward
@@ -577,11 +600,17 @@ function MapSearchBox({
     return { hits: out.slice(0, SEARCH_MAX_RESULTS), wardByLabel }
   }, [q, wardsFc])
 
+  const allHits = useMemo(() => {
+    return [...hits, ...placeHits].slice(0, SEARCH_MAX_RESULTS)
+  }, [hits, placeHits])
+
   const select = (hit: SearchHit) => {
     setOpen(false)
     setQ('')
     inputRef.current?.blur()
-    if (hit.type === 'ward') {
+    if (hit.type === 'place' && hit.lat != null && hit.lng != null) {
+      onSelectPoint?.(hit.lat, hit.lng, hit.label)
+    } else if (hit.type === 'ward') {
       const f = wardByLabel.get(hit.label)
       if (f) onSelectWard(f)
     } else {
@@ -599,13 +628,13 @@ function MapSearchBox({
         onChange={e => { setQ(e.target.value); setOpen(true) }}
         onFocus={() => { setOpen(true); onFocus() }}
         onBlur={() => setTimeout(() => setOpen(false), 150)}
-        placeholder="Search ward, constituency…"
+        placeholder="Search ward, locality, landmark…"
         aria-label="Search the map"
         className="map-search__input"
       />
       {open && q.trim().length >= SEARCH_MIN_CHARS && (
         <div className="map-search__results">
-          {hits.length > 0 ? hits.map(hit => (
+          {allHits.length > 0 ? allHits.map(hit => (
             <button
               key={hit.key}
               type="button"
@@ -1511,6 +1540,26 @@ export default function LayeredLucknowMap({ initialWardName }: { initialWardName
     handleWardClick(feature, latlng, { boundary: 'wards369', recenter: !fitted })
   }, [handleWardClick, panelOpen])
 
+  const selectSearchPoint = useCallback((lat: number, lng: number, label: string) => {
+    setEnabledOverlays(prev => (prev.has('wards369') ? prev : new Set(prev).add('wards369')))
+    const map = mapRef.current
+    if (!map) return
+    map.flyTo([lat, lng], 16, { duration: 1.2 })
+    if (layerData.wards369) {
+      const pt = turfPoint([lng, lat])
+      for (const f of layerData.wards369.features) {
+        if (f.geometry) {
+          try {
+            if (booleanPointInPolygon(pt, f as any)) {
+              handleWardClick(f, L.latLng(lat, lng), { boundary: 'wards369' })
+              return
+            }
+          } catch {}
+        }
+      }
+    }
+  }, [handleWardClick, layerData.wards369])
+
   const clearPopups = useCallback(() => {
     setSelectedWardPopup(null)
     closeWardSidebar()
@@ -2019,6 +2068,7 @@ export default function LayeredLucknowMap({ initialWardName }: { initialWardName
         <MapSearchBox
           wardsFc={layerData.wards369}
           onSelectWard={selectSearchWard}
+          onSelectPoint={selectSearchPoint}
           onFocus={() => { ensureWards369(); if (isMobile) setPanelOpen(false) }}
         />
         <LayerControlPanel
