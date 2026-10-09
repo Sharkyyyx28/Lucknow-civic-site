@@ -46,6 +46,12 @@ const PATHS: Record<string, JSX.Element> = {
       <path d="M15.5 12v1.75a2.75 2.75 0 0 0 5.5 0V12a9 9 0 1 0-3.6 7.2" />
     </>
   ),
+  'find-my-ward': (
+    <>
+      <circle cx="11" cy="11" r="7" />
+      <path d="m21 21-4.35-4.35M11 8v6M8 11h6" />
+    </>
+  ),
   about: (
     <>
       <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H5.5A1.5 1.5 0 0 1 4 16.5v-11Z" />

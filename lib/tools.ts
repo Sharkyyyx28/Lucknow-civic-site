@@ -33,6 +33,14 @@ export const TOOLS: Tool[] = [
     cta: 'Find a representative',
   },
   {
+    id: 'find-my-ward',
+    name: 'Find my ward & corporator',
+    href: '/find-my-ward',
+    blurb:
+      'Enter any Lucknow address, locality or landmark to instantly discover your municipal ward, elected corporator, MLA constituency and civic details.',
+    cta: 'Look up your ward',
+  },
+  {
     id: 'rail-network',
     name: 'Rail network timeline',
     href: '/metro-network',
@@ -84,6 +92,7 @@ export function isNavGroup(entry: NavEntry): entry is NavGroup {
 
 export const NAV_LINKS: NavEntry[] = [
   { label: 'Map', href: '/map' },
+  { label: 'Find My Ward', href: '/find-my-ward' },
   { label: 'Community', href: '/community' },
   { label: 'Officials', href: '/officials' },
   {
@@ -108,6 +117,14 @@ export type Intent = {
 }
 
 export const INTENTS: Intent[] = [
+  {
+    id: 'find-my-ward',
+    label: 'I want to know which ward I live in',
+    answer:
+      'Look up any Lucknow address or landmark to instantly find your municipal ward, corporator, and Vidhan Sabha MLA.',
+    primary: 'find-my-ward',
+    secondary: 'officials',
+  },
   {
     id: 'where-am-i',
     label: 'I want to see where I am on the map',
