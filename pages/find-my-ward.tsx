@@ -211,7 +211,7 @@ export default function FindMyWardPage({ directory }: Props) {
 
           {/* Quick suggestions pills */}
           <div className="flex flex-wrap items-center gap-2 mb-10">
-            <span className="text-xs font-semibold text-ink-500 uppercase tracking-wider">Quick:</span>
+            <span className="text-xs font-semibold text-ink-500 uppercase tracking-wider">Quick Localities:</span>
             {QUICK_SUGGESTIONS.map(place => (
               <button
                 key={place}
@@ -350,7 +350,7 @@ export default function FindMyWardPage({ directory }: Props) {
                   </p>
                 </div>
 
-                {/* Helplines to be added */}
+                {/* Emergency Helplines quick block */}
                 <div className="rounded-lg border border-brand-200 bg-brand-50/50 p-5 shadow-sm">
                   <span className="text-xs font-bold uppercase tracking-wider text-brand-800">
                     Civic Helplines
