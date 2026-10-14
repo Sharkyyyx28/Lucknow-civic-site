@@ -211,7 +211,7 @@ export default function FindMyWardPage({ directory }: Props) {
 
           {/* Quick suggestions pills */}
           <div className="flex flex-wrap items-center gap-2 mb-10">
-            <span className="text-xs font-semibold text-ink-500 uppercase tracking-wider">Quick Localities:</span>
+            <span className="text-xs font-semibold text-ink-500 uppercase tracking-wider">Quick:</span>
             {QUICK_SUGGESTIONS.map(place => (
               <button
                 key={place}
