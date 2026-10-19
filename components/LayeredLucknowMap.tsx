@@ -15,6 +15,8 @@ import { haversineMeters } from '../lib/geo'
 import {
   AREA_AGE_LAYER,
   AREA_AGE_LAYER_ID,
+  AQI_LAYER,
+  AQI_LAYER_ID,
   LUCKNOW_BOUNDS,
   LUCKNOW_CENTER,
   BASE_LAYERS,
@@ -28,6 +30,7 @@ import {
   type OverlayId,
   type WardProperties,
 } from '../lib/mapLayers'
+import { getAqiCategory, type AqiStation } from '../lib/aqi'
 // Type-only, so none of wardGeometry's server-side deps reach the bundle.
 import type { WardBoundarySet } from '../lib/wardGeometry'
 // Shapes and role metadata only — lib/officialsTypes.ts is free of `fs`, so it
@@ -498,6 +501,25 @@ function LayerControlPanel({
             </div>
             <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2, marginLeft: 20 }}>
               Tints the city by when each area grew, with a chip per dated locality.
+            </div>
+
+            {/* Air Quality (AQI Stations) */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 7, paddingTop: 7, borderTop: '1px solid #f3f4f6' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', flex: 1 }}>
+                <input
+                  type="checkbox"
+                  checked={enabledOverlays.has(AQI_LAYER_ID)}
+                  onChange={() => onOverlayToggle(AQI_LAYER_ID)}
+                  style={{ accentColor: '#16a34a' }}
+                />
+                <span style={{ fontSize: 13 }} aria-hidden="true">🍃</span>
+                <span style={{ color: enabledOverlays.has(AQI_LAYER_ID) ? '#111827' : '#6b7280' }}>
+                  {AQI_LAYER.label}
+                </span>
+              </label>
+            </div>
+            <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2, marginLeft: 20 }}>
+              Live CAAQMS monitoring stations across Lucknow.
             </div>
           </div>
         )}
@@ -1584,6 +1606,20 @@ export default function LayeredLucknowMap({ initialWardName }: { initialWardName
   const baseCfg = BASE_LAYERS[activeBase]
 
   const ageOn = enabledOverlays.has(AREA_AGE_LAYER_ID)
+  const aqiOn = enabledOverlays.has(AQI_LAYER_ID)
+  const [aqiStations, setAqiStations] = useState<AqiStation[]>([])
+
+  useEffect(() => {
+    if (!aqiOn) return
+    fetch('/api/aqi')
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data.stations)) {
+          setAqiStations(data.stations)
+        }
+      })
+      .catch(() => {})
+  }, [aqiOn])
 
   // Nearest amenity per category to the located "you are here" point, shown
   // only right after using Locate Me (not on plain ward clicks).
@@ -2058,6 +2094,37 @@ export default function LayeredLucknowMap({ initialWardName }: { initialWardName
             </Popup>
           </Marker>
         ))}
+
+        {/* AQI CAAQMS Stations */}
+        {aqiOn && aqiStations.map(st => {
+          const cat = getAqiCategory(st.aqi)
+          const aqiIcon = L.divIcon({
+            className: 'aqi-pin',
+            html: `<div style="background:${cat.color};color:${cat.textColor};padding:3px 8px;border-radius:999px;font-weight:700;font-size:12px;border:2px solid #fff;box-shadow:0 3px 10px rgba(0,0,0,0.35);display:flex;align-items:center;gap:3px;white-space:nowrap;font-family:system-ui,sans-serif;"><span>🍃</span><span>${st.aqi}</span></div>`,
+            iconSize: [56, 26],
+            iconAnchor: [28, 13],
+          })
+          return (
+            <Marker key={`aqi-${st.id}`} position={[st.lat, st.lng]} icon={aqiIcon}>
+              <Popup>
+                <div style={{ fontSize: 13, minWidth: 200, fontFamily: 'system-ui, sans-serif' }}>
+                  <div style={{ fontSize: 11, color: '#6b7280', fontWeight: 600 }}>CPCB / UPPCB CAAQMS</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: '#111827', marginTop: 2 }}>{st.name}</div>
+                  <div style={{ marginTop: 6, display: 'inline-block', padding: '2px 8px', borderRadius: 4, background: cat.color, color: cat.textColor, fontWeight: 700, fontSize: 12 }}>
+                    AQI {st.aqi} · {st.category}
+                  </div>
+                  <div style={{ marginTop: 8, fontSize: 12, color: '#374151' }}>
+                    <div>PM2.5: <strong>{st.pm25} µg/m³</strong></div>
+                    <div>PM10: <strong>{st.pm10} µg/m³</strong></div>
+                  </div>
+                  <div style={{ marginTop: 6, fontSize: 11, color: '#6b7280', borderTop: '1px solid #f1f5f9', paddingTop: 4 }}>
+                    {cat.advisory}
+                  </div>
+                </div>
+              </Popup>
+            </Marker>
+          )
+        })}
 
       </MapContainer>
 

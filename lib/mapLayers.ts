@@ -131,13 +131,20 @@ export function layerConfig(id: LayerId): LayerConfig {
 // boundary, so it is switchable on its own. Only the full explorer at /map
 // offers it — the small maps have no room for its legend.
 export const AREA_AGE_LAYER_ID = 'areaAge'
+export const AQI_LAYER_ID = 'aqi'
 
-export type OverlayId = LayerId | typeof AREA_AGE_LAYER_ID
+export type OverlayId = LayerId | typeof AREA_AGE_LAYER_ID | typeof AQI_LAYER_ID
 
 export const AREA_AGE_LAYER = {
   id: AREA_AGE_LAYER_ID,
   label: 'Area Age (Ancient – Present)',
   shortLabel: 'Area age',
+} as const
+
+export const AQI_LAYER = {
+  id: AQI_LAYER_ID,
+  label: 'Air Quality (CPCB AQI Stations)',
+  shortLabel: 'Air quality',
 } as const
 
 /**
@@ -147,7 +154,7 @@ export const AREA_AGE_LAYER = {
 export function boundaryFilesFor(enabled: Set<OverlayId>): Set<LayerId> {
   const ids = new Set<LayerId>()
   enabled.forEach(id => {
-    if (id !== AREA_AGE_LAYER_ID) ids.add(id)
+    if (id !== AREA_AGE_LAYER_ID && id !== AQI_LAYER_ID) ids.add(id as LayerId)
   })
   if (enabled.has(AREA_AGE_LAYER_ID)) ids.add('wards369')
   return ids
