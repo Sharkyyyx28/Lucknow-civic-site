@@ -1,7 +1,9 @@
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import CountUp from './count-up'
 import HeroBackdrop from './hero-backdrop'
 import LucknowCorpMap from './lucknow-map-hero'
+import type { CityAqiSummary } from '../lib/aqi'
 
 const STATS: Array<[string, string]> = [
   ['9', 'assembly constituencies'],
@@ -24,6 +26,15 @@ const TICKS = [
 ]
 
 const Intro = () => {
+  const [aqi, setAqi] = useState<CityAqiSummary | null>(null)
+
+  useEffect(() => {
+    fetch('/api/aqi')
+      .then(r => r.json())
+      .then(setAqi)
+      .catch(() => {})
+  }, [])
+
   // The height is capped as well as proportional: on a tall or zoomed-out
   // viewport a bare 88vh opens a screen-deep empty band under the type.
   return (
@@ -42,9 +53,26 @@ const Intro = () => {
           <div className="animate-fadeInUp space-y-7">
             {/* A filing tag rather than a pill — squared off, ruled on the
                 left, the way a register entry is labelled. */}
-            <p className="inline-flex items-center gap-2.5 border-l-2 border-accent-500 bg-white py-1.5 pl-3 pr-4 text-xs font-semibold uppercase tracking-[0.18em] text-brand-800 shadow-sm">
-              Officials · Metro · Community
-            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="inline-flex items-center gap-2.5 border-l-2 border-accent-500 bg-white py-1.5 pl-3 pr-4 text-xs font-semibold uppercase tracking-[0.18em] text-brand-800 shadow-sm">
+                Officials · Metro · Community
+              </p>
+              {aqi && (
+                <Link
+                  href="/map"
+                  className="inline-flex items-center gap-2 rounded-full border border-ink-200 bg-white px-3 py-1 text-xs font-medium text-ink-700 shadow-sm hover:border-brand-500 transition-colors"
+                  title={aqi.advisory}
+                >
+                  <span
+                    className="h-2 w-2 rounded-full shrink-0"
+                    style={{ backgroundColor: aqi.color }}
+                  />
+                  <span>
+                    Lucknow AQI <strong className="font-semibold text-ink-900">{aqi.cityAqi}</strong> ({aqi.category})
+                  </span>
+                </Link>
+              )}
+            </div>
 
             {/* Sized to what the left column can actually hold at each
                 breakpoint — "Lucknow civic data," runs about 10.3x the font
