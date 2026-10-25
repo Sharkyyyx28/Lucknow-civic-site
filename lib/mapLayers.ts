@@ -132,8 +132,13 @@ export function layerConfig(id: LayerId): LayerConfig {
 // offers it — the small maps have no room for its legend.
 export const AREA_AGE_LAYER_ID = 'areaAge'
 export const AQI_LAYER_ID = 'aqi'
+export const HERITAGE_LAYER_ID = 'heritage'
 
-export type OverlayId = LayerId | typeof AREA_AGE_LAYER_ID | typeof AQI_LAYER_ID
+export type OverlayId =
+  | LayerId
+  | typeof AREA_AGE_LAYER_ID
+  | typeof AQI_LAYER_ID
+  | typeof HERITAGE_LAYER_ID
 
 export const AREA_AGE_LAYER = {
   id: AREA_AGE_LAYER_ID,
@@ -147,6 +152,12 @@ export const AQI_LAYER = {
   shortLabel: 'Air quality',
 } as const
 
+export const HERITAGE_LAYER = {
+  id: HERITAGE_LAYER_ID,
+  label: 'Awadh Heritage & Monuments',
+  shortLabel: 'Heritage',
+} as const
+
 /**
  * The boundary files a set of switched-on layers needs fetched — the area-age
  * layer draws no outlines of its own but still reads a ward file.
@@ -154,7 +165,9 @@ export const AQI_LAYER = {
 export function boundaryFilesFor(enabled: Set<OverlayId>): Set<LayerId> {
   const ids = new Set<LayerId>()
   enabled.forEach(id => {
-    if (id !== AREA_AGE_LAYER_ID && id !== AQI_LAYER_ID) ids.add(id as LayerId)
+    if (id !== AREA_AGE_LAYER_ID && id !== AQI_LAYER_ID && id !== HERITAGE_LAYER_ID) {
+      ids.add(id as LayerId)
+    }
   })
   if (enabled.has(AREA_AGE_LAYER_ID)) ids.add('wards369')
   return ids
