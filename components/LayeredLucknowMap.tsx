@@ -17,6 +17,8 @@ import {
   AREA_AGE_LAYER_ID,
   AQI_LAYER,
   AQI_LAYER_ID,
+  HERITAGE_LAYER,
+  HERITAGE_LAYER_ID,
   LUCKNOW_BOUNDS,
   LUCKNOW_CENTER,
   BASE_LAYERS,
@@ -31,6 +33,7 @@ import {
   type WardProperties,
 } from '../lib/mapLayers'
 import { getAqiCategory, type AqiStation } from '../lib/aqi'
+import { LUCKNOW_HERITAGE_SITES, type HeritageSite } from '../lib/heritageData'
 // Type-only, so none of wardGeometry's server-side deps reach the bundle.
 import type { WardBoundarySet } from '../lib/wardGeometry'
 // Shapes and role metadata only — lib/officialsTypes.ts is free of `fs`, so it
@@ -520,6 +523,25 @@ function LayerControlPanel({
             </div>
             <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2, marginLeft: 20 }}>
               Live CAAQMS monitoring stations across Lucknow.
+            </div>
+
+            {/* Awadh Heritage & Landmarks */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 7, paddingTop: 7, borderTop: '1px solid #f3f4f6' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', flex: 1 }}>
+                <input
+                  type="checkbox"
+                  checked={enabledOverlays.has(HERITAGE_LAYER_ID)}
+                  onChange={() => onOverlayToggle(HERITAGE_LAYER_ID)}
+                  style={{ accentColor: '#d97706' }}
+                />
+                <span style={{ fontSize: 13 }} aria-hidden="true">🏛️</span>
+                <span style={{ color: enabledOverlays.has(HERITAGE_LAYER_ID) ? '#111827' : '#6b7280' }}>
+                  {HERITAGE_LAYER.label}
+                </span>
+              </label>
+            </div>
+            <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2, marginLeft: 20 }}>
+              Bara Imambara, Rumi Darwaza, Residency & Nawabi monuments.
             </div>
           </div>
         )}
@@ -1607,6 +1629,7 @@ export default function LayeredLucknowMap({ initialWardName }: { initialWardName
 
   const ageOn = enabledOverlays.has(AREA_AGE_LAYER_ID)
   const aqiOn = enabledOverlays.has(AQI_LAYER_ID)
+  const heritageOn = enabledOverlays.has(HERITAGE_LAYER_ID)
   const [aqiStations, setAqiStations] = useState<AqiStation[]>([])
 
   useEffect(() => {
@@ -2119,6 +2142,42 @@ export default function LayeredLucknowMap({ initialWardName }: { initialWardName
                   </div>
                   <div style={{ marginTop: 6, fontSize: 11, color: '#6b7280', borderTop: '1px solid #f1f5f9', paddingTop: 4 }}>
                     {cat.advisory}
+                  </div>
+                </div>
+              </Popup>
+            </Marker>
+          )
+        })}
+
+        {/* Awadh Heritage & Landmarks */}
+        {heritageOn && LUCKNOW_HERITAGE_SITES.map(site => {
+          const heritageIcon = L.divIcon({
+            className: 'heritage-pin',
+            html: `<div style="background:#78350f;color:#fef3c7;width:32px;height:32px;border-radius:50%;border:2px solid #fde68a;box-shadow:0 3px 10px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;font-size:16px;">🏛️</div>`,
+            iconSize: [32, 32],
+            iconAnchor: [16, 16],
+          })
+          return (
+            <Marker key={`heritage-${site.id}`} position={[site.lat, site.lng]} icon={heritageIcon}>
+              <Popup>
+                <div style={{ fontSize: 13, minWidth: 220, fontFamily: 'system-ui, sans-serif' }}>
+                  <div style={{ fontSize: 11, color: '#92400e', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    {site.era} Era · {site.yearBuilt}
+                  </div>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: '#111827', marginTop: 2 }}>
+                    {site.name}
+                  </div>
+                  {site.hindiName && (
+                    <div style={{ fontSize: 12, color: '#6b7280', marginTop: 1 }}>{site.hindiName}</div>
+                  )}
+                  <div style={{ marginTop: 6, fontSize: 12, color: '#374151', lineHeight: 1.45 }}>
+                    {site.summary}
+                  </div>
+                  <div style={{ marginTop: 8, padding: '4px 8px', borderRadius: 4, background: '#fef3c7', color: '#92400e', fontSize: 11, fontWeight: 600 }}>
+                    ✨ {site.highlight}
+                  </div>
+                  <div style={{ marginTop: 6, fontSize: 11, color: '#6b7280' }}>
+                    Builder: <strong>{site.commissionedBy}</strong>
                   </div>
                 </div>
               </Popup>
