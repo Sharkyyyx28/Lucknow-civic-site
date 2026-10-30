@@ -40,6 +40,31 @@ const MODE_LABEL: Record<Mode, string> = {
  * and the explorer below only exists once there is a real date to anchor it
  * to. The map is client-only anyway, so this costs no extra paint.
  */
+// UPMRC Lucknow Metro Red Line Stations (Phase 1)
+const RED_LINE_STATION_NAMES = [
+  'CCS Airport',
+  'Amausi',
+  'Transport Nagar',
+  'Krishna Nagar',
+  'Singar Nagar',
+  'Alambagh',
+  'Alambagh Bus Stand',
+  'Mawaiya',
+  'Durgapuri',
+  'Charbagh',
+  'Hussainganj',
+  'Sachivalaya',
+  'Hazratganj',
+  'KD Singh Babu Stadium',
+  'Vishwavidyalaya',
+  'IT City',
+  'Badshahnagar',
+  'Lekhraj Market',
+  'Bhootnath Market',
+  'Indira Nagar',
+  'Munshipulia',
+]
+
 export default function MetroNetworkPage() {
   const [today, setToday] = useState<string | null>(null)
   useEffect(() => setToday(istToday()), [])
