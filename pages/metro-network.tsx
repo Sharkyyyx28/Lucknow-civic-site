@@ -40,6 +40,17 @@ const MODE_LABEL: Record<Mode, string> = {
  * and the explorer below only exists once there is a real date to anchor it
  * to. The map is client-only anyway, so this costs no extra paint.
  */
+/** Official UPMRC fare slab calculation */
+function calculateUpmrcFare(stationCount: number): number {
+  if (stationCount <= 1) return 10
+  if (stationCount === 2) return 15
+  if (stationCount <= 5) return 20
+  if (stationCount <= 9) return 30
+  if (stationCount <= 13) return 40
+  if (stationCount <= 17) return 50
+  return 60
+}
+
 // UPMRC Lucknow Metro Red Line Stations (Phase 1)
 const RED_LINE_STATION_NAMES = [
   'CCS Airport',
