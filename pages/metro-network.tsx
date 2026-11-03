@@ -40,42 +40,6 @@ const MODE_LABEL: Record<Mode, string> = {
  * and the explorer below only exists once there is a real date to anchor it
  * to. The map is client-only anyway, so this costs no extra paint.
  */
-/** Official UPMRC fare slab calculation */
-function calculateUpmrcFare(stationCount: number): number {
-  if (stationCount <= 1) return 10
-  if (stationCount === 2) return 15
-  if (stationCount <= 5) return 20
-  if (stationCount <= 9) return 30
-  if (stationCount <= 13) return 40
-  if (stationCount <= 17) return 50
-  return 60
-}
-
-// UPMRC Lucknow Metro Red Line Stations (Phase 1)
-const RED_LINE_STATION_NAMES = [
-  'CCS Airport',
-  'Amausi',
-  'Transport Nagar',
-  'Krishna Nagar',
-  'Singar Nagar',
-  'Alambagh',
-  'Alambagh Bus Stand',
-  'Mawaiya',
-  'Durgapuri',
-  'Charbagh',
-  'Hussainganj',
-  'Sachivalaya',
-  'Hazratganj',
-  'KD Singh Babu Stadium',
-  'Vishwavidyalaya',
-  'IT City',
-  'Badshahnagar',
-  'Lekhraj Market',
-  'Bhootnath Market',
-  'Indira Nagar',
-  'Munshipulia',
-]
-
 export default function MetroNetworkPage() {
   const [today, setToday] = useState<string | null>(null)
   useEffect(() => setToday(istToday()), [])
@@ -303,6 +267,8 @@ function NetworkExplorer({ today }: { today: string }) {
         </section>
       </div>
 
+      <MetroRoutePlanner />
+
       {/* Provenance — what this map can and cannot be trusted for. Full width
           now, with the prose in columns so it fills the row without any single
           line running the whole 1500px. */}
@@ -310,27 +276,27 @@ function NetworkExplorer({ today }: { today: string }) {
         <summary className="cursor-pointer font-semibold">Where this data comes from, and what it is not</summary>
         <div className="mt-3 text-sm text-ink-600 grid gap-x-10 gap-y-3 md:grid-cols-2 xl:grid-cols-3">
               <p>
-                <strong>Operational lines</strong> — Purple, Green and Yellow station positions come from
-                OpenStreetMap route relations, so they are real surveyed locations. Their opening dates are recorded
-                events.
+                <strong>Operational Red Line</strong> — North-South corridor from CCS Airport to Munshi Pulia (23 km, 21 stations), operating daily since March 2019 under UPMRC.
+
+
               </p>
               <p>
-                <strong>Suburban rail</strong> corridors run on existing Indian Railways alignments, so those station
-                positions are real too — but only the major stations are shown. BSRP adds halts between them that have
-                no published position yet.
+                <strong>East-West Blue Line</strong> — 11.1 km corridor connecting Charbagh to Vasant Kunj across 12 stations, approved by Union Cabinet.
+
+
               </p>
               <p>
-                <strong>Unbuilt metro lines</strong> — Pink, Blue, Red, Orange and Grey — are drawn from BMRCL&rsquo;s
-                published station names placed by landmark along the announced corridor. No detailed alignment survey
-                is public, so treat the shape as &ldquo;roughly here&rdquo;, not as an engineering drawing.
+                <strong>Station coordinates</strong> — Station positions are indicative, placed along known corridors and landmarks.
+
+
               </p>
               <p>
-                <strong>Future dates are claims, not facts.</strong> Only the two Pink Line stretches and the Blue
-                Line&rsquo;s ORR section carry an operator target — everything else is a press or analyst figure, and
-                several of those sources disagree with each other. Where they do, the disagreement is written onto the
-                milestone rather than quietly resolved. Nothing here has a CMRS clearance behind it except the lines
-                already running, and the Pink Line alone has already slipped from May to July to August to September
-                2026.
+                <strong>Service Timings</strong> — Trains operate daily from 06:00 AM to 10:00 PM with 5–7 min peak frequency.
+
+
+
+
+
               </p>
               <p>
                 For a single upcoming line with its countdown and official updates, see the{' '}
@@ -351,6 +317,183 @@ function Stat({ value, label }: { value: number | string; label: string }) {
       <div className="text-2xl md:text-4xl font-bold leading-none">{value}</div>
       <div className="text-xs md:text-sm uppercase tracking-wide text-ink-500 mt-1">{label}</div>
     </div>
+  )
+}
+
+function MetroRoutePlanner() {
+  const redStations = NETWORK.find(l => l.id === 'red')?.stations ?? []
+  const [from, setFrom] = useState('CCS International Airport')
+  const [to, setTo] = useState('Hazratganj')
+
+  const fromIdx = redStations.findIndex(s => s.name === from)
+  const toIdx = redStations.findIndex(s => s.name === to)
+  const stationCount = fromIdx !== -1 && toIdx !== -1 ? Math.abs(toIdx - fromIdx) : 0
+
+  // Official UPMRC fare calculation slabs
+  const calculateFare = (stops: number) => {
+    if (stops === 0) return 0
+    if (stops === 1) return 10
+    if (stops === 2) return 15
+    if (stops <= 6) return 20
+    if (stops <= 9) return 30
+    if (stops <= 13) return 40
+    if (stops <= 17) return 50
+    return 60
+  }
+
+  const fare = calculateFare(stationCount)
+  const discountedFare = Math.round(fare * 0.9)
+  const estMinutes = Math.round(stationCount * 2.25)
+
+  const routeStations =
+    fromIdx !== -1 && toIdx !== -1
+      ? fromIdx <= toIdx
+        ? redStations.slice(fromIdx, toIdx + 1)
+        : redStations.slice(toIdx, fromIdx + 1).reverse()
+      : []
+
+  const swap = () => {
+    setFrom(to)
+    setTo(from)
+  }
+
+  return (
+    <section className="mt-8 mb-8 rounded-xl border border-ink-200 bg-white p-6 md:p-8 shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+        <span className="text-xs font-bold uppercase tracking-wider text-red-700 bg-red-50 px-2.5 py-1 rounded">
+          UPMRC Transit Planner
+        </span>
+        <span className="text-xs text-ink-500 font-mono">Service: 06:00 AM – 10:00 PM</span>
+      </div>
+      <h2 className="font-display text-2xl md:text-3xl font-bold text-ink-900 mb-2">
+        Lucknow Metro Route & Fare Calculator
+      </h2>
+      <p className="text-ink-600 text-sm md:text-base mb-6 leading-relaxed">
+        Select any two stations on the operational Red Line (North-South Corridor) to calculate fare, travel duration, and station stops.
+      </p>
+
+      {/* Selectors */}
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-center gap-3 mb-6 bg-ink-50/70 p-4 rounded-lg border border-ink-200">
+        <div>
+          <label className="block text-xs font-semibold uppercase text-ink-500 mb-1">
+            Origin Station
+          </label>
+          <select
+            value={from}
+            onChange={e => setFrom(e.target.value)}
+            className="w-full rounded-md border border-ink-300 bg-white p-2.5 text-sm font-semibold text-ink-800 shadow-sm focus:border-red-600 focus:outline-none"
+          >
+            {redStations.map(s => (
+              <option key={`from-${s.name}`} value={s.name}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <button
+          type="button"
+          onClick={swap}
+          title="Swap stations"
+          className="self-center mt-3 md:mt-4 p-2 rounded-full border border-ink-300 bg-white text-ink-600 hover:bg-ink-100 transition-colors shadow-sm"
+        >
+          ⇄
+        </button>
+
+        <div>
+          <label className="block text-xs font-semibold uppercase text-ink-500 mb-1">
+            Destination Station
+          </label>
+          <select
+            value={to}
+            onChange={e => setTo(e.target.value)}
+            className="w-full rounded-md border border-ink-300 bg-white p-2.5 text-sm font-semibold text-ink-800 shadow-sm focus:border-red-600 focus:outline-none"
+          >
+            {redStations.map(s => (
+              <option key={`to-${s.name}`} value={s.name}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {from === to ? (
+        <div className="p-4 bg-ink-50 rounded-lg text-sm text-ink-500 text-center">
+          Please select two different stations to calculate fare and route.
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+          <div className="rounded-lg border border-red-100 bg-red-50/50 p-4 text-center">
+            <span className="block text-xs uppercase text-red-700 font-semibold tracking-wide">
+              Token Fare
+            </span>
+            <span className="block text-3xl font-display font-bold text-red-700 mt-1">
+              ₹{fare}
+            </span>
+            <span className="text-[11px] text-red-600">Standard single journey</span>
+          </div>
+
+          <div className="rounded-lg border border-emerald-100 bg-emerald-50/50 p-4 text-center">
+            <span className="block text-xs uppercase text-emerald-700 font-semibold tracking-wide">
+              GoSmart Card
+            </span>
+            <span className="block text-3xl font-display font-bold text-emerald-700 mt-1">
+              ₹{discountedFare}
+            </span>
+            <span className="text-[11px] text-emerald-600">10% smart card discount</span>
+          </div>
+
+          <div className="rounded-lg border border-ink-200 bg-ink-50/60 p-4 text-center">
+            <span className="block text-xs uppercase text-ink-500 font-semibold tracking-wide">
+              Est. Travel Time
+            </span>
+            <span className="block text-3xl font-display font-bold text-ink-900 mt-1">
+              ~{estMinutes} min
+            </span>
+            <span className="text-[11px] text-ink-500">Average dwell included</span>
+          </div>
+
+          <div className="rounded-lg border border-ink-200 bg-ink-50/60 p-4 text-center">
+            <span className="block text-xs uppercase text-ink-500 font-semibold tracking-wide">
+              Station Stops
+            </span>
+            <span className="block text-3xl font-display font-bold text-ink-900 mt-1">
+              {stationCount}
+            </span>
+            <span className="text-[11px] text-ink-500">Red Line direct corridor</span>
+          </div>
+        </div>
+      )}
+
+      {/* Route stations timeline display */}
+      {routeStations.length > 0 && from !== to && (
+        <div className="mt-4 pt-4 border-t border-ink-200">
+          <h4 className="text-xs font-semibold uppercase tracking-wider text-ink-500 mb-3">
+            Route Stops ({routeStations.length} stations)
+          </h4>
+          <div className="flex flex-wrap items-center gap-2">
+            {routeStations.map((st, i) => (
+              <span key={st.name} className="inline-flex items-center text-xs">
+                <span
+                  className={`px-2.5 py-1 rounded font-medium ${
+                    i === 0 || i === routeStations.length - 1
+                      ? 'bg-red-700 text-white font-bold'
+                      : 'bg-ink-100 text-ink-800'
+                  }`}
+                >
+                  {st.name}
+                  {st.interchange && <span className="ml-1 text-[10px] opacity-80">⇄</span>}
+                </span>
+                {i < routeStations.length - 1 && (
+                  <span className="mx-1 text-ink-400">→</span>
+                )}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </section>
   )
 }
 
