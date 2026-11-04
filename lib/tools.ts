@@ -41,6 +41,14 @@ export const TOOLS: Tool[] = [
     cta: 'Look up your ward',
   },
   {
+    id: 'ask',
+    name: 'Awadh Mitr (AI Civic Copilot)',
+    href: '/ask',
+    blurb:
+      'Ask any question regarding Lucknow municipal services, house tax payment, water supply, streetlight repairs, ward corporators and UP Jansunwai grievances.',
+    cta: 'Ask Awadh Mitr',
+  },
+  {
     id: 'rail-network',
     name: 'Rail network timeline',
     href: '/metro-network',
@@ -95,6 +103,7 @@ export const NAV_LINKS: NavEntry[] = [
   { label: 'Find My Ward', href: '/find-my-ward' },
   { label: 'Community', href: '/community' },
   { label: 'Officials', href: '/officials' },
+  { label: 'Awadh Mitr (AI)', href: '/ask' },
   {
     label: 'Data',
     items: [{ label: 'Social handles', href: '/social-handles' }],

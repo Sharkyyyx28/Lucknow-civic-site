@@ -2,6 +2,7 @@ import Alert from './alert'
 import Footer from './footer'
 import Meta from './meta'
 import Navbar from './navbar'
+import FloatingAiAssistant from './floating-ai-assistant'
 
 type Props = {
   preview?: boolean
@@ -17,6 +18,7 @@ const Layout = ({ preview, children }: Props) => {
         <Navbar />
         <main>{children}</main>
       </div>
+      <FloatingAiAssistant />
       <Footer />
     </>
   )
