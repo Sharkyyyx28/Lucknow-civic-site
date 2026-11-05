@@ -22,6 +22,8 @@ import {
 import { INPUT, INLINE_BTN, PRIMARY_BTN, QUIET_BTN } from '../../lib/ui'
 import { fetchJson } from '../../lib/fetchJson'
 
+import AiIssueTriage from '../../components/ai-issue-triage'
+
 const LocationPickerMap = dynamic(() => import('../../components/location-picker-map'), { ssr: false })
 
 export default function NewCommunityPostPage() {
@@ -90,6 +92,12 @@ export default function NewCommunityPostPage() {
     setWardName(place.wardName)
     setLocateError(null)
     if (!placeLabel.trim()) setPlaceLabel(place.label)
+  }
+
+  const handleApplyAiSuggestions = (suggestedTitle: string, suggestedBody: string, suggestedCategory: PostCategory) => {
+    if (suggestedTitle) setTitle(suggestedTitle)
+    if (suggestedBody) setBody(suggestedBody)
+    if (suggestedCategory) setCategory(suggestedCategory)
   }
 
   const handleSubmit = async (e: FormEvent) => {
@@ -170,6 +178,15 @@ export default function NewCommunityPostPage() {
             Pin the place you are writing about — the ward and corporation are worked out from
             the pin, so your neighbours see it in their feed.
           </p>
+
+          <AiIssueTriage
+            lat={lat}
+            lng={lng}
+            wardName={wardName}
+            currentTitle={title}
+            currentBody={body}
+            onApplySuggestions={handleApplyAiSuggestions}
+          />
 
           <form onSubmit={handleSubmit} className="space-y-8">
             <fieldset>
